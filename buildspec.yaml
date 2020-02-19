@@ -13,7 +13,8 @@ phases:
       - USER_BASE_PATH=$(python -m site --user-base)
       - export PATH=$PATH:$USER_BASE_PATH/bin
       - sam build 
-      - sam deploy
+      - yes | sam deploy
+ 
   post_build:
     commands:
       - echo $AWS_ACCESS_ID
