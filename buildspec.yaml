@@ -13,9 +13,10 @@ phases:
       - USER_BASE_PATH=$(python -m site --user-base)
       - export PATH=$PATH:$USER_BASE_PATH/bin
       - sam build 
-      - sam deploy --confirm-changeset
+      
  
   post_build:
     commands:
+      - sam deploy --confirm-changeset
       - echo $AWS_ACCESS_ID
       - printf '{"ImageURI":"image_URI"}' > imageDetail.json
