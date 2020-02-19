@@ -4,7 +4,6 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - delete-all.sh
       - npm install
       - pip install --user aws-sam-cli  
       - USER_BASE_PATH=$(python -m site --user-base)
