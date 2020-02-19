@@ -243,7 +243,7 @@ Resources:
             Effect: Allow
             Principal: '*'
             Action: 's3:GetObject'
-            Resource: !Sub arn:aws:s3:::${mvpangular}/*
+            Resource: !Sub arn:aws:s3:::${mvpangular}/* 
 
   mvpsamsrc:
     Type: AWS::S3::Bucket 
