@@ -9,11 +9,11 @@ phases:
       - USER_BASE_PATH=$(python -m site --user-base)
       - export PATH=$PATH:$USER_BASE_PATH/bin
       - sam build 
+      - echo y | sam deploy
 
   build:
     commands:
       
-      - echo y | sam deploy
 
  
   post_build:

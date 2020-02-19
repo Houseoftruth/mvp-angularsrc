@@ -245,23 +245,7 @@ Resources:
             Action: 's3:GetObject'
             Resource: !Sub arn:aws:s3:::${mvpangular}/*
 
-  mvpsrcbuildangular:
-    Type: AWS::S3::Bucket 
-    Properties:
-      BucketName: 'mvp-srcbuild-angular'
-  ProductBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref mvpsrcbuildangular
-      PolicyDocument:
-        Id: PublicReadPolicy
-        Version: 2012-10-17
-        Statement:
-          - Sid: PublicReadForGetBucketObjects
-            Effect: Allow
-            Principal: '*'
-            Action: 's3:GetObject'
-            Resource: !Sub arn:aws:s3:::${mvpsrcbuildangular}/* 
+
   myLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:

@@ -225,7 +225,7 @@ Resources:
     Type: AWS::S3::BucketPolicy
     Properties:
       Bucket:
-        Ref: mvpangular
+        Ref: mvpsrcbuildangular
       PolicyDocument:
         Id: PublicReadPolicy
         Version: 2012-10-17
@@ -235,9 +235,13 @@ Resources:
           Principal: '*'
           Action: s3:GetObject
           Resource:
-            Fn::Sub: arn:aws:s3:::${mvpangular}/*
+            Fn::Sub: arn:aws:s3:::${mvpsrcbuildangular}/*
   mvpangular:
     Type: AWS::S3::Bucket
+  mvpsrcbuildangular:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: mvp-srcbuild-angular
   myLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
