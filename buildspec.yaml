@@ -13,7 +13,7 @@ phases:
       - USER_BASE_PATH=$(python -m site --user-base)
       - export PATH=$PATH:$USER_BASE_PATH/bin
       - sam build 
-      - printf 'y\n' | sam deploy
+      - sam deploy <<< "y"
  
   post_build:
     commands:
