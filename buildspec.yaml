@@ -13,7 +13,7 @@ phases:
   build:
     commands:
       
-      - printf 'samuel-app\neu-central-1/nsimplechat_connections/nY' | sam deploy --guided
+      - printf '/n/n/nY' | sam deploy --guided
 
  
   post_build:
