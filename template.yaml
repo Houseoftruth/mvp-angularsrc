@@ -245,7 +245,7 @@ Resources:
             Action: 's3:GetObject'
             Resource: !Sub arn:aws:s3:::${mvpangular}/*
 
-  mvp-srcbuild-angular:
+  mvpsrcbuildangular:
     Type: AWS::S3::Bucket 
     Properties:
       BucketName: 'mvp-srcbuild-angular'
