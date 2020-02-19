@@ -4,15 +4,16 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - delete-all.sh
       - npm install
       - pip install --user aws-sam-cli  
-      
-
-  build:
-    commands:
       - USER_BASE_PATH=$(python -m site --user-base)
       - export PATH=$PATH:$USER_BASE_PATH/bin
       - sam build 
+
+  build:
+    commands:
+      
       - yes | sam deploy
 
  
