@@ -252,7 +252,7 @@ Resources:
   ProductBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
-      Bucket: !Ref mvpsrc-build-angular
+      Bucket: !Ref mvpsrcbuildangular
       PolicyDocument:
         Id: PublicReadPolicy
         Version: 2012-10-17
