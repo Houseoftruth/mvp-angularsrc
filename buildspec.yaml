@@ -13,7 +13,7 @@ phases:
   build:
     commands:
       
-      - sam deploy
+      - echo y | sam deploy
 
  
   post_build:
