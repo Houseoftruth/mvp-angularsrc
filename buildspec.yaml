@@ -13,7 +13,7 @@ phases:
   build:
     commands:
       
-      - cloudformation deploy
+      - sam deploy
 
  
   post_build:
