@@ -13,7 +13,7 @@ phases:
   build:
     commands:
       
-      - printf 'y\n | sam deploy
+      - printf 'y\n' | sam deploy
 
  
   post_build:
