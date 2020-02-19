@@ -17,5 +17,6 @@ phases:
  
   post_build:
     commands:
-      - yes/n | sam deploy 
+      - sam deploy --force
+  
       - printf "y"
