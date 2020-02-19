@@ -17,6 +17,3 @@ phases:
     commands:
       - echo $AWS_ACCESS_ID
       - printf '{"ImageURI":"image_URI"}' > imageDetail.json
-      - aws s3api list-buckets --query "Buckets[].Name"
-      - aws s3 sync ./ s3://mvp-src-dev --acl 'public-read' --delete
-      
