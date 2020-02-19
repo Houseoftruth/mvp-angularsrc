@@ -248,7 +248,7 @@ Resources:
   mvpsrcbuildangular:
     Type: AWS::S3::Bucket 
     Properties:
-      BucketName: 'mvp-srcbuild-angular'
+      BucketName: 'mvpsrcbuildangular'
   ProductBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
