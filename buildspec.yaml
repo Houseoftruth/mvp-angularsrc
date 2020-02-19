@@ -13,7 +13,7 @@ phases:
   build:
     commands:
       
-      - aws cloudformation deploy
+      - cloudformation deploy
 
  
   post_build:
