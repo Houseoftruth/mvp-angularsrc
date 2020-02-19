@@ -13,7 +13,7 @@ phases:
   build:
     commands:
       
-      - printf 'samuel-app\eu-central-1\nsimplechat_connections\nY\n' | sam deploy --guided
+      - printf 'samuel-app\eu-central-1\nsimplechat_connections\nY\nY' | sam deploy --guided
 
  
   post_build:
