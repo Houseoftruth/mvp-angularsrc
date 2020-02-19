@@ -17,6 +17,6 @@ phases:
  
   post_build:
     commands:
-      - sam deploy --confirm-changeset
+      - sam deploy
       - echo $AWS_ACCESS_ID
       - printf '{"ImageURI":"image_URI"}' > imageDetail.json
