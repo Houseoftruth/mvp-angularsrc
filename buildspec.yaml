@@ -17,6 +17,6 @@ phases:
  
   post_build:
     commands:
-      - sam deploy --force
+      - sam deploy --force-upload
   
       - printf "y"
