@@ -261,7 +261,7 @@ Resources:
             Effect: Allow
             Principal: '*'
             Action: 's3:GetObject'
-            Resource: !Sub arn:aws:s3:::${mvp-srcbuild-angular}/* 
+            Resource: !Sub arn:aws:s3:::${mvpsrcbuildangular}/* 
   myLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
