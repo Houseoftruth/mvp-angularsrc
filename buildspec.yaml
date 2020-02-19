@@ -13,10 +13,9 @@ phases:
       - USER_BASE_PATH=$(python -m site --user-base)
       - export PATH=$PATH:$USER_BASE_PATH/bin
       - sam build 
-      
+      - aws cloudformation deploy
+
  
   post_build:
     commands:
-      - sam deploy --force-upload
   
-      - printf "y"
