@@ -213,9 +213,9 @@ Resources:
       RouteSelectionExpression: "$request.body.message"
          
   mvpqr:
-    Type: AWS::S3::Bucket
-  Properties:
-    BucketName: 'mvpqr' 
+    Type: AWS::S3::Bucket 
+    Properties:
+      BucketName: 'mvpqr'
   ProductBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -231,8 +231,6 @@ Resources:
             Resource: !Sub arn:aws:s3:::${mvpqr}/* 
   mvpsrc:
    Type: AWS::S3::Bucket 
-  Properties:
-    BucketName: 'mvpsrc'
   ProductBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -262,8 +260,8 @@ Resources:
 
   mvpangular:
     Type: AWS::S3::Bucket 
-  Properties:
-    BucketName: 'mvpangular'
+    Properties:
+      BucketName: 'mvpangular'
   ProductBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
