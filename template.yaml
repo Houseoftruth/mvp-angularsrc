@@ -19,7 +19,7 @@ Parameters:
     MaxLength: 50
     AllowedPattern: ^[A-Za-z_]+$
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
-  TableName2:
+  TableNamea:
     Type: String
     Default: 'simplechat_connections2'
     Description: (Required) The name of the new DynamoDB to store connection identifiers for each connected clients. Minimum 3 characters
@@ -27,7 +27,7 @@ Parameters:
     MaxLength: 50
     AllowedPattern: ^[A-Za-z_]+$
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
-  TableName3:
+  TableNameb:
     Type: String
     Default: 'simplechat_connections3'
     Description: (Required) The name of the new DynamoDB to store connection identifiers for each connected clients. Minimum 3 characters
@@ -35,7 +35,7 @@ Parameters:
     MaxLength: 50
     AllowedPattern: ^[A-Za-z_]+$
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
-  TableName4:
+  TableNamec:
     Type: String
     Default: 'simplechat_connections4'
     Description: (Required) The name of the new DynamoDB to store connection identifiers for each connected clients. Minimum 3 characters
@@ -160,7 +160,7 @@ Resources:
         WriteCapacityUnits: 5
       SSESpecification:
         SSEEnabled: True
-      TableName: !Ref TableName2
+      TableName: !Ref TableNamea
   ConnectionsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -175,7 +175,7 @@ Resources:
         WriteCapacityUnits: 5
       SSESpecification:
         SSEEnabled: True
-      TableName: !Ref TableName3
+      TableName: !Ref TableNameb
 
   OnConnectFunction:
     Type: AWS::Serverless::Function
