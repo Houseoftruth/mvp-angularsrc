@@ -2,8 +2,8 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "mvpsamsrc"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1i3r0faxaxwre"
+stack_name = "mvpsamsrcdev"
+s3_bucket = "mvpsamcloudformation"
 s3_prefix = "mvp"
 region = "eu-central-1"
 confirm_changeset = true

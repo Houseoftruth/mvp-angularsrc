@@ -191,7 +191,7 @@ Resources:
   OnConnectFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: OnConnectFunction
+      CodeUri: s3://mvpsamcloudformation/e9cf27f12b34ecb8f8199c8a9ec931ad
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs12.x
@@ -216,7 +216,7 @@ Resources:
   OnDisconnectFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: OnDisconnectFunction
+      CodeUri: s3://mvpsamcloudformation/9cff5fd5fd3599e9ccc85588482eb173
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs12.x
@@ -241,7 +241,7 @@ Resources:
   SendMessageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: SendMessageFunction
+      CodeUri: s3://mvpsamcloudformation/deba4da244b957b4a0be74a2a76340fc
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs12.x
@@ -359,7 +359,7 @@ Resources:
   addToCustomerLog:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: addToCustomerLog
+      CodeUri: s3://mvpsamcloudformation/60b8119dc33c2db90ccb94a32e568599
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
@@ -374,7 +374,7 @@ Resources:
   addToAdminLog:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: addToAdminLog
+      CodeUri: s3://mvpsamcloudformation/572414195df5f70e8b5e83dfe493c6f1
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
@@ -389,7 +389,7 @@ Resources:
   addToKitchenLog:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: addToKitchenLog
+      CodeUri: s3://mvpsamcloudformation/e65c245e63d07fcd7b9c90a036e8a4c9
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
@@ -403,7 +403,7 @@ Resources:
   createUser:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: createUser
+      CodeUri: s3://mvpsamcloudformation/9f87c0045a35cf061915733b28a8b619
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
@@ -417,7 +417,7 @@ Resources:
   createTable:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: createTable
+      CodeUri: s3://mvpsamcloudformation/60444ab09c31b18b41b7348eb11df217
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
@@ -431,7 +431,7 @@ Resources:
   storeQr:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: storeQr
+      CodeUri: s3://mvpsamcloudformation/90537e1807cfe63096b29461b81db3f5
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
