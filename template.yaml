@@ -148,7 +148,7 @@ Resources:
   mvpusers:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: 'mvp-users'
+      TableName: 'mvpusers'
       AttributeDefinitions:
       - AttributeName: "date"
         AttributeType: "N"
