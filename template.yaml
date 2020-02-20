@@ -119,7 +119,7 @@ Resources:
       SSESpecification:
         SSEEnabled: True
       TableName: !Ref mvp-chatlog
-      
+
   mvp-users:
     Type: AWS::DynamoDB::Table
     Properties:
