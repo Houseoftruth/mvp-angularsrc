@@ -119,7 +119,7 @@ Resources:
         WriteCapacityUnits: 5
       SSESpecification:
         SSEEnabled: True
-      TableName: !Ref mvpchatlog
+      TableName: !Ref TableName
 
   mvpusers:
     Type: AWS::DynamoDB::Table
@@ -136,7 +136,7 @@ Resources:
         WriteCapacityUnits: 5
       SSESpecification:
         SSEEnabled: True
-      TableName: !Ref mvpusers
+      TableName: !Ref TableName
   ConnectionsTable:
     Type: AWS::DynamoDB::Table
     Properties:
