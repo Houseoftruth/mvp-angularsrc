@@ -316,6 +316,7 @@ Resources:
     Properties:
         LogGroupName: 'myLogGroup'
         RetentionInDays: 180
+        
   myLogStream:
     Type: AWS::Logs::LogStream
     Properties:
