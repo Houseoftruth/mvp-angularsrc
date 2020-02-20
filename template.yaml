@@ -189,7 +189,7 @@ Resources:
           TABLE_NAME: !Ref TableName
       Policies:
       - DynamoDBCrudPolicy:
-          TableName: !Ref TableName4
+          TableName: !Ref TableNamec
 
   OnConnectPermission:
     Type: AWS::Lambda::Permission
