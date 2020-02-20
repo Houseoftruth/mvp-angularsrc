@@ -188,8 +188,8 @@ Resources:
         Variables:
           TABLE_NAME: !Ref TableName
       Policies:
-      - DynamoDBCrudPolicy:
-          TableName: !Ref TableNamec
+      - AmazonS3FullAccess:
+          TableName: 'mvpsamcloudformation'
 
   OnConnectPermission:
     Type: AWS::Lambda::Permission
