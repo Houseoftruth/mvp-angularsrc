@@ -2,9 +2,9 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "samuel-app"
+stack_name = "mvpsamsrc"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1i3r0faxaxwre"
-s3_prefix = "samuel-app"
+s3_prefix = "mvp"
 region = "eu-central-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
