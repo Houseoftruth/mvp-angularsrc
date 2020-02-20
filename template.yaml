@@ -104,9 +104,10 @@ Resources:
       DeploymentId: !Ref Deployment
       ApiId: !Ref mvpsocket
 
-  mvp-chatlog:
+  mvpchatlog:
     Type: AWS::DynamoDB::Table
     Properties:
+      TableName: 'mvp-chatlog'
       AttributeDefinitions:
       - AttributeName: "date"
         AttributeType: "N"
@@ -118,11 +119,12 @@ Resources:
         WriteCapacityUnits: 5
       SSESpecification:
         SSEEnabled: True
-      TableName: !Ref mvp-chatlog
+      TableName: !Ref mvpchatlog
 
-  mvp-users:
+  mvpusers:
     Type: AWS::DynamoDB::Table
     Properties:
+      TableName: 'mvp-users'
       AttributeDefinitions:
       - AttributeName: "date"
         AttributeType: "N"
@@ -134,7 +136,7 @@ Resources:
         WriteCapacityUnits: 5
       SSESpecification:
         SSEEnabled: True
-      TableName: !Ref mvp-users
+      TableName: !Ref mvpusers
   ConnectionsTable:
     Type: AWS::DynamoDB::Table
     Properties:
