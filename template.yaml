@@ -212,7 +212,21 @@ Resources:
       ProtocolType: WEBSOCKET
       RouteSelectionExpression: "$request.body.message"
          
-
+  mvpqr:
+    Type: AWS::S3::Bucket 
+  ProductBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref mvpqr
+      PolicyDocument:
+        Id: PublicReadPolicy
+        Version: 2012-10-17
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Sub arn:aws:s3:::${mvpqr}/* 
   mvpsrc:
    Type: AWS::S3::Bucket 
   ProductBucketPolicy:
