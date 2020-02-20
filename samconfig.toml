@@ -4,7 +4,7 @@ version = 0.1
 [default.deploy.parameters]
 stack_name = "mvpsamsrcdev"
 s3_bucket = "mvpsamcloudformation"
-s3_prefix = "mvp"
+s3_prefix = "mvp" 
 region = "eu-central-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
