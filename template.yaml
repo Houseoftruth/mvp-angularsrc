@@ -377,7 +377,7 @@ Resources:
   myLogStream:
     Type: AWS::Logs::LogStream
     Properties:
-        LogGroupName: "myLogGroup"
+        LogGroupName: !Ref myLogGroup
         LogStreamName: "myLogStream" 
 
   createTableLog:
