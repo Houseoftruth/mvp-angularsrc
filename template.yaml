@@ -13,7 +13,7 @@ Globals:
 Parameters:
   TableName:
     Type: String
-    Default: 'simplechat_connections'
+    Default: 'simplechatconnections'
     Description: (Required) The name of the new DynamoDB to store connection identifiers for each connected clients. Minimum 3 characters
     MinLength: 3
     MaxLength: 50
@@ -21,7 +21,7 @@ Parameters:
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
   TableNamea:
     Type: String
-    Default: 'simplechat_connections2'
+    Default: 'simplechatconnections2'
     Description: (Required) The name of the new DynamoDB to store connection identifiers for each connected clients. Minimum 3 characters
     MinLength: 3
     MaxLength: 50
@@ -29,7 +29,7 @@ Parameters:
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
   TableNameb:
     Type: String
-    Default: 'simplechat_connections3'
+    Default: 'simplechatconnections3'
     Description: (Required) The name of the new DynamoDB to store connection identifiers for each connected clients. Minimum 3 characters
     MinLength: 3
     MaxLength: 50
@@ -37,7 +37,7 @@ Parameters:
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
   TableNamec:
     Type: String
-    Default: 'simplechat_connections4'
+    Default: 'simplechatconnections4'
     Description: (Required) The name of the new DynamoDB to store connection identifiers for each connected clients. Minimum 3 characters
     MinLength: 3
     MaxLength: 50
