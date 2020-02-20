@@ -236,6 +236,21 @@ Resources:
           Action: s3:GetObject
           Resource:
             Fn::Sub: arn:aws:s3:::${mvpangularsrc}/*
+  ProductBucketPolicy2:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: mvpsamsrc
+      PolicyDocument:
+        Id: PublicReadPolicy
+        Version: 2012-10-17
+        Statement:
+        - Sid: PublicReadForGetBucketObjects
+          Effect: Allow
+          Principal: '*'
+          Action: s3:GetObject
+          Resource:
+            Fn::Sub: arn:aws:s3:::${mvpsamsrc}/*
   mvpangular:
     Type: AWS::S3::Bucket
   mvpsamsrc:
