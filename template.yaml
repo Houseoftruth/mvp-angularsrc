@@ -262,8 +262,8 @@ Resources:
 
   mvpangular:
     Type: AWS::S3::Bucket 
-    Properties:
-      BucketName: 'mvpangular'
+  Properties:
+    BucketName: 'mvpangular'
   ProductBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
