@@ -104,6 +104,37 @@ Resources:
       DeploymentId: !Ref Deployment
       ApiId: !Ref mvpsocket
 
+  mvp-chatlog:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: "date"
+        AttributeType: "N"
+      KeySchema:
+      - AttributeName: "date"
+        KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      SSESpecification:
+        SSEEnabled: True
+      TableName: !Ref mvp-chatlog
+      
+  mvp-users:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: "date"
+        AttributeType: "N"
+      KeySchema:
+      - AttributeName: "date"
+        KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      SSESpecification:
+        SSEEnabled: True
+      TableName: !Ref mvp-users
   ConnectionsTable:
     Type: AWS::DynamoDB::Table
     Properties:

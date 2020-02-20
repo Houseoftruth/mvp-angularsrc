@@ -23,7 +23,7 @@ exports.lambdaHandler = async (event, context) => {
     var s3 = new AWS.S3({ region: "eu-central-1", apiVersion: '2006-03-01' });
     var folder = "QR"
     var filename = "Qr#1"
-    var bucketName = 'mvp-qr'
+    var bucketName = 'mvpqr'
     var keyName = getKeyName(folder, filename);
     var content = 'I Am Not Qr';
     var params = { Bucket: bucketName, Key: keyName, Body: content };
