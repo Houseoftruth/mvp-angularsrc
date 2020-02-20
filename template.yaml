@@ -376,7 +376,7 @@ Resources:
         
   myLogStream:
     Type: AWS::Logs::LogStream
-    Properties:
+    Properties: 
         LogGroupName: !Ref myLogGroup
         LogStreamName: "myLogStream" 
 
