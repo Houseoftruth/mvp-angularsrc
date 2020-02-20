@@ -188,8 +188,13 @@ Resources:
         Variables:
           TABLE_NAME: !Ref TableName
       Policies:
-      - AmazonS3FullAccess:
-          TableName: 'mvpsamcloudformation'
+        - AWSLambdaExecute
+        - Version: '2012-10-17' 
+        Statement:
+          - Effect: Allow
+            Action: '*'
+            Resource: '*'
+            Resource: 'arn:aws:s3:::mvpsamcloudformation/*'
 
   OnConnectPermission:
     Type: AWS::Lambda::Permission
