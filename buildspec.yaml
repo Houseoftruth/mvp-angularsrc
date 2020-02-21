@@ -21,7 +21,6 @@ phases:
   post_build:
     commands:
       - echo y | sam deploy
-      - aws s3 sync ./ s3://mvpsamcf --acl public-read --delete
 
 
   
