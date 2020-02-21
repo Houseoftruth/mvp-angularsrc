@@ -221,10 +221,10 @@ Resources:
       FunctionName:
         Ref: SendMessageFunction
       Principal: apigateway.amazonaws.com
-  mvpqr:
+  mvpsamcf:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: mvpqr
+      BucketName: mvpsamcf
   ProductBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -240,6 +240,10 @@ Resources:
           Action: s3:GetObject
           Resource:
             Fn::Sub: arn:aws:s3:::${mvpangularsrc}/*
+  mvpqr:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: mvpqr
   mvpsrc:
     Type: AWS::S3::Bucket
   ProductBucketPolicy2:
