@@ -2,7 +2,7 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "mvpsamsrcdev"
+stack_name = "mvpsam"
 s3_bucket = "mvpsamcf"
 s3_prefix = "mvp" 
 region = "eu-central-1"

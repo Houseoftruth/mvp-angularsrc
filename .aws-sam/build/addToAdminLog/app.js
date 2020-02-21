@@ -21,7 +21,7 @@ exports.lambdaHandler = async (event, context) => {
     const documentClient = new AWS.DynamoDB.DocumentClient({ region: "eu-central-1" });
 
     const params = {
-        TableName: "mvp-chatlog",
+        TableName: "mvpchatlog",
         Item: {
             date: Date.now(),
             message: "Richard isn't going to be in today, just to let you know..."

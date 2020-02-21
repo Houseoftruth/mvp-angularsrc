@@ -5,19 +5,24 @@ phases:
   pre_build:
     commands:
       - npm install
+      - npm install
+      - npm install -g @angular/cli
       - pip install --user aws-sam-cli  
       - USER_BASE_PATH=$(python -m site --user-base)
       - export PATH=$PATH:$USER_BASE_PATH/bin
-      - sam build 
-      - sam deploy 
+ 
 
   build:
     commands:
-      
+      - sam build 
+        
 
  
   post_build:
     commands:
+      - sam deploy  
+      - aws s3 sync ./dist s3://mvpangular --acl public-read --delete
       - aws s3 sync ./ s3://mvpsamcf --acl public-read --delete
+
 
   
