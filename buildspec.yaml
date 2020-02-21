@@ -19,7 +19,7 @@ phases:
  
   post_build:
     commands:
-      - aws cloudformation deploy --template-file template.yaml --stack-name mvpsam
+      - aws cloudformation deploy --template-file template.yaml --stack-name mvpsam --capabilities CAPABILITY_IAM
       - aws s3 sync ./dist s3://mvpangular --acl public-read --delete
       - aws s3 sync ./ s3://mvpsamcf --acl public-read --delete
 
