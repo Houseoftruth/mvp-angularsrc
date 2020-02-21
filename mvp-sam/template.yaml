@@ -51,7 +51,17 @@ Resources:
       Name: mvpsocket
       ProtocolType: WEBSOCKET
       RouteSelectionExpression: "$request.body.message"
- 
+  ConnectRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref mvpsocket
+      RouteKey: $connect
+      AuthorizationType: NONE
+      OperationName: ConnectRoute
+      Target: !Join
+        - '/'
+        - - 'integrations'
+          - !Ref ConnectInteg
  
   DisconnectRoute:
     Type: AWS::ApiGatewayV2::Route
@@ -96,6 +106,7 @@ Resources:
   Deployment:
     Type: AWS::ApiGatewayV2::Deployment
     DependsOn:
+    - ConnectRoute
     - SendRoute
     - DisconnectRoute
     Properties:
