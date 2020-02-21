@@ -269,7 +269,7 @@ Resources:
     Type: AWS::S3::BucketPolicy
     Properties:
       Bucket: !Ref mvpsamcf
-      PolicyDocument:
+      PolicyDocument: 
         Id: PublicReadPolicy
         Version: 2012-10-17
         Statement:
