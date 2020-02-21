@@ -173,48 +173,7 @@ Resources:
       Policies:
       - DynamoDBCrudPolicy:
           TableName: !Ref TableName
-      - S3CrudPolicy: {
-
-        "Statement": [
-          {
-            "Effect": "Allow",
-            "Action": [
-              "s3:GetObject",
-              "s3:ListBucket",
-              "s3:GetBucketLocation",
-              "s3:GetObjectVersion",
-              "s3:PutObject",
-              "s3:PutObjectAcl",
-              "s3:GetLifecycleConfiguration",
-              "s3:PutLifecycleConfiguration",
-              "s3:DeleteObject"
-            ],
-            "Resource": [
-              {
-                "Fn::Sub": [
-                  "arn:${AWS::Partition}:s3:::${mvpsamcf}",
-                  {
-                    "mvpsamcf": {
-                      "Ref": "mvpsamcf"
-                    }
-                  }
-                ]
-              },
-              {
-                "Fn::Sub": [
-                  "arn:${AWS::Partition}:s3:::${mvpsamcf}/*",
-                  {
-                    "mvpsamcf": {
-                      "Ref": "mvpsamcf"
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-        
-      }
+      
 
   OnDisconnectPermission:
     Type: AWS::Lambda::Permission
