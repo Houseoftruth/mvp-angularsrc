@@ -192,20 +192,20 @@ Resources:
             "Resource": [
               {
                 "Fn::Sub": [
-                  "arn:${AWS::Partition}:s3:::${bucketName}",
+                  "arn:${AWS::Partition}:s3:::${mvpsamcf}",
                   {
-                    "bucketName": {
-                      "Ref": "BucketName"
+                    "mvpsamcf": {
+                      "Ref": "mvpsamcf"
                     }
                   }
                 ]
               },
               {
                 "Fn::Sub": [
-                  "arn:${AWS::Partition}:s3:::${bucketName}/*",
+                  "arn:${AWS::Partition}:s3:::${mvpsamcf}/*",
                   {
-                    "bucketName": {
-                      "Ref": "BucketName"
+                    "mvpsamcf": {
+                      "Ref": "mvpsamcf"
                     }
                   }
                 ]
