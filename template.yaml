@@ -62,15 +62,7 @@ Resources:
         - '/'
         - - 'integrations'
           - !Ref ConnectInteg
-  ConnectInteg:
-    Type: AWS::ApiGatewayV2::Integration
-    Properties:
-      ApiId: !Ref mvpsocket
-      Description: Connect Integration
-      IntegrationType: AWS_PROXY
-      IntegrationUri: 
-        Fn::Sub:
-            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OnConnectFunction.Arn}/invocations
+ 
   DisconnectRoute:
     Type: AWS::ApiGatewayV2::Route
     Properties:
@@ -177,35 +169,8 @@ Resources:
         SSEEnabled: True
       TableName: !Ref TableNameb
 
-  OnConnectFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: onconnect/
-      Handler: app.handler
-      MemorySize: 256
-      Runtime: nodejs12.x
-      Environment:
-        Variables:
-          TABLE_NAME: !Ref TableName
-      Policies:
-        - PolicyName: root
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action: '*'
-                Resource: '*'
-                Resource: 'arn:aws:s3:::mvpsamcloudformation/*'
-
-  OnConnectPermission:
-    Type: AWS::Lambda::Permission
-    DependsOn:
-      - mvpsocket
-      - OnConnectFunction
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName: !Ref OnConnectFunction
-      Principal: apigateway.amazonaws.com
+  
+ 
   OnDisconnectFunction:
     Type: AWS::Serverless::Function
     Properties:
