@@ -20,7 +20,7 @@ phases:
 
   post_build:
     commands:
-      - echo y | sam deploy --force-upload
+      - echo y | sam deploy --force-upload 
 
 
   
