@@ -13,14 +13,14 @@ phases:
 
   build:
     commands:
+      - sam package --template-file template.yaml --s3-bucket mvpsamcf --output-template-file out.yaml
+ 
       - sam build 
         
- 
- 
+
   post_build:
     commands:
-      - echo yes | aws cloudformation deploy --template-file template.yaml --stack-name mvpsam --capabilities CAPABILITY_IAM
-      - aws s3 sync ./dist s3://mvpangular --acl public-read --delete
+      - sam deploy
       - aws s3 sync ./ s3://mvpsamcf --acl public-read --delete
 
 
