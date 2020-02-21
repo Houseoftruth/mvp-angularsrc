@@ -52,6 +52,27 @@ Resources:
       ProtocolType: WEBSOCKET
       RouteSelectionExpression: "$request.body.message"
  
+ 
+  DisconnectRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref mvpsocket
+      RouteKey: $disconnect
+      AuthorizationType: NONE
+      OperationName: DisconnectRoute
+      Target: !Join
+        - '/'
+        - - 'integrations'
+          - !Ref DisconnectInteg
+  DisconnectInteg:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref mvpsocket
+      Description: Disconnect Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri: 
+        Fn::Sub:
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OnDisconnectFunction.Arn}/invocations
   SendRoute:
     Type: AWS::ApiGatewayV2::Route
     Properties:
@@ -76,6 +97,7 @@ Resources:
     Type: AWS::ApiGatewayV2::Deployment
     DependsOn:
     - SendRoute
+    - DisconnectRoute
     Properties:
       ApiId: !Ref mvpsocket
 
@@ -137,7 +159,72 @@ Resources:
       TableName: !Ref TableNameb
 
   
+ 
+  OnDisconnectFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ondisconnect/
+      Handler: app.handler
+      MemorySize: 256
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref TableName
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: !Ref TableName
+      - S3CrudPolicy: {
 
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:ListBucket",
+              "s3:GetBucketLocation",
+              "s3:GetObjectVersion",
+              "s3:PutObject",
+              "s3:PutObjectAcl",
+              "s3:GetLifecycleConfiguration",
+              "s3:PutLifecycleConfiguration",
+              "s3:DeleteObject"
+            ],
+            "Resource": [
+              {
+                "Fn::Sub": [
+                  "arn:${AWS::Partition}:s3:::${bucketName}",
+                  {
+                    "bucketName": {
+                      "Ref": "BucketName"
+                    }
+                  }
+                ]
+              },
+              {
+                "Fn::Sub": [
+                  "arn:${AWS::Partition}:s3:::${bucketName}/*",
+                  {
+                    "bucketName": {
+                      "Ref": "BucketName"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+        
+      }
+
+  OnDisconnectPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - mvpsocket
+      - OnDisconnectFunction
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref OnDisconnectFunction
+      Principal: apigateway.amazonaws.com
   SendMessageFunction:
     Type: AWS::Serverless::Function
     Properties:
