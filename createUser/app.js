@@ -1,5 +1,3 @@
-// const axios = require('axios')
-// const url = 'http://checkip.amazonaws.com/';
 const AWS = require('aws-sdk')
 
 AWS.config.update({ region: "eu-central-1" });
@@ -32,13 +30,29 @@ exports.lambdaHandler = async (event, context) => {
     try {
 
       const data = await documentClient.put(params).promise();
-      console.log(data);
+   
+
+      response = {
+        'statusCode': 200,
+        'body': JSON.stringify({
+            message: 'New user create successfully...',
+        })
+      }
+
+      return response
 
     } catch (err) {
 
-      console.log(err);
-      
+      response = {
+        'statusCode': 200,
+        'body': JSON.stringify({
+            message: 'There was an error creating new user...',
+        })
+      }
+
+      return response
+
     }
 
-    return response
 };
+

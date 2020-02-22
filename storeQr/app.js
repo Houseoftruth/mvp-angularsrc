@@ -1,5 +1,3 @@
-// const axios = require('axios')
-// const url = 'http://checkip.amazonaws.com/';
 const AWS = require('aws-sdk')
 
 AWS.config.update({ region: "eu-central-1" });

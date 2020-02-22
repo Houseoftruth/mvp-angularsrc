@@ -1,5 +1,4 @@
-// const axios = require('axios')
-// const url = 'http://checkip.amazonaws.com/';
+
 const AWS = require('aws-sdk')
 
 AWS.config.update({ region: "eu-central-1" });
@@ -46,7 +45,7 @@ exports.lambdaHandler = async (event, context) => {
         ReadCapacityUnits: 1,
         WriteCapacityUnits: 1
       },
-      TableName: 'TABLE_NAME',
+      TableName: 'TABlEAU',
       StreamSpecification: {
         StreamEnabled: false
       }
