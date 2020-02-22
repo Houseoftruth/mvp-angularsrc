@@ -55,7 +55,6 @@ exports.lambdaHandler = async (event, context) => {
     try {
 
       const dota = await ddb.createTable(tableParams).promise()
-      console.log(dota);
 
       response = {
         'statusCode': 200,
@@ -63,8 +62,8 @@ exports.lambdaHandler = async (event, context) => {
             message: 'New table created successfully...',
         })
       }
-      return response
 
+      return response
 
     } catch (err) {
 
@@ -74,6 +73,7 @@ exports.lambdaHandler = async (event, context) => {
             message: 'There was an error creating new table...',
         })
       }
+      
       return response
 
     }

@@ -31,11 +31,10 @@ exports.lambdaHandler = async (event, context) => {
 
       const data = await documentClient.put(params).promise();
    
-
       response = {
         'statusCode': 200,
         'body': JSON.stringify({
-            message: 'New user create successfully...',
+            message: 'New user created successfully...',
         })
       }
 

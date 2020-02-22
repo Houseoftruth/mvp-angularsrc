@@ -1,5 +1,3 @@
-// const axios = require('axios')
-// const url = 'http://checkip.amazonaws.com/';
 const AWS = require('aws-sdk')
 
 AWS.config.update({ region: "eu-central-1" });
@@ -21,6 +19,7 @@ exports.lambdaHandler = async (event, context) => {
     const documentClient = new AWS.DynamoDB.DocumentClient({ region: "eu-central-1" });
 
     const params = {
+
         TableName: "mvpchatlog",
         Item: {
             date: Date.now(),
@@ -32,15 +31,14 @@ exports.lambdaHandler = async (event, context) => {
 
         const data = await documentClient.put(params).promise();
         
-
         response = {
             'statusCode': 200,
             'body': JSON.stringify({
                 message: 'Log entry successfully saved...',
             })
         }
-        return response
 
+        return response
 
     } catch (err) {
 
@@ -51,7 +49,8 @@ exports.lambdaHandler = async (event, context) => {
             'error': JSON.stringify(err)
             })
         }
-        return response
 
+        return response
+        
     }
 };

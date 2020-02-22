@@ -42,8 +42,10 @@ exports.lambdaHandler = async (event, context) => {
             statusCode: 200,
             body: JSON.stringify('There was an error saving QR Code...'),
         };
+        
         return response;
     }
+
     function getKeyName(folder, filename) {
         return folder + '/' + filename;
     }

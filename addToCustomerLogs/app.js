@@ -39,6 +39,7 @@ exports.lambdaHandler = async (event, context) => {
                 message: 'Log entry successfully saved...',
             })
         }
+        
         return response
 
 
@@ -51,6 +52,7 @@ exports.lambdaHandler = async (event, context) => {
             'error': JSON.stringify(err)
             })
         }
+
         return response
 
     }
