@@ -226,25 +226,6 @@ Resources:
       ProtocolType: WEBSOCKET
       RouteSelectionExpression: "$request.body.message"
 
-  mvpsamcf:
-    Type: AWS::S3::Bucket 
-    Properties:
-      BucketName: 'mvpsamcf'
-  ProductBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref mvpsamcf
-      PolicyDocument: 
-        Id: PublicReadPolicy
-        Version: 2012-10-17
-        Statement:
-          - Sid: PublicReadForGetBucketObjects
-            Effect: Allow
-            Principal: '*'
-            Action: 's3:GetObject'
-            Resource: !Sub arn:aws:s3:::${mvpsamcf}/*   
-
-
    
   mvpqr:
     Type: AWS::S3::Bucket 
@@ -331,6 +312,24 @@ Resources:
             Principal: '*'
             Action: 's3:GetObject'
             Resource: !Sub arn:aws:s3:::${mvpangularsrc}/* 
+
+  mvpsamcf:
+    Type: AWS::S3::Bucket 
+    Properties:
+      BucketName: 'mvpsamcf'
+  ProductBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref mvpsamcf
+      PolicyDocument:
+        Id: PublicReadPolicy
+        Version: 2012-10-17
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Sub arn:aws:s3:::${mvpsamcf}/* 
   myLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
