@@ -11,5 +11,10 @@
     "url": "https://github.com/Houseoftruth/mveep.githttps://github.com/Houseoftruth/mveep.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^25.1.0",
+    "serverless-python-requirements": "^5.1.0"
+  },
+  "devDependencies": {}
 }
