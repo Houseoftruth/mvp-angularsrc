@@ -1,0 +1,4 @@
+  mvpuserpool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName : 'mvpuserpool'

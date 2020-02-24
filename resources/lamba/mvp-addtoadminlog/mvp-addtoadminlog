@@ -1,0 +1,42 @@
+  addToKitchenLog:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: addToKitchenLogs/
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /addtokitchenlogs
+            Method: get
+      Policies:
+      - AmazonDynamoDBFullAccess
+
+  createUser:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: createUser/
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /createuser
+            Method: get
+      Policies:
+      - AmazonDynamoDBFullAccess
+Outputs:
+
+  storeQrApi:
+    Description: "storeQr endpoint URL for Prod stage for storeQrfunction"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+
+  storeQr:
+    Description: "storeQr Lambda Function ARN"
+    Value: !GetAtt storeQr.Arn
+    
+  storeQrIamRole:
+    Description: "Implicit IAM Role created for storeQr function"
+    Value: !GetAtt storeQrRole.Arn

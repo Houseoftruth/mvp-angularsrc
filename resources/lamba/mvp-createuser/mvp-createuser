@@ -1,0 +1,28 @@
+  createUser:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: createUser/
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /createuser
+            Method: get
+      Policies:
+      - AmazonDynamoDBFullAccess
+
+Outputs:
+
+  createUser:
+    Description: "createUser Lambda Function ARN"
+    Value: !GetAtt createUser.Arn
+
+  createUserIamRole:
+    Description: "Implicit IAM Role created for createUser function"
+    Value: !GetAtt createUserRole.Arn
+  
+  createTableApi:
+    Description: "API Gateway endpoint URL for Prod stage for createTable function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"

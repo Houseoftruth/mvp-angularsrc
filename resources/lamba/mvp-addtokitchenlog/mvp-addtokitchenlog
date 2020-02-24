@@ -1,0 +1,28 @@
+  addToKitchenLog:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: addToKitchenLogs/
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /addtokitchenlogs
+            Method: get
+      Policies:
+      - AmazonDynamoDBFullAccess
+
+Outputs:
+
+  addToKitchenLogApi:
+    Description: "API Gateway endpoint URL for Prod stage for addToKitchenLog function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+
+  addToKitchenLog:
+    Description: "addToKitchenLog Lambda Function ARN"
+    Value: !GetAtt addToKitchenLog.Arn
+
+  addToKitchenLogIamRole:
+    Description: "Implicit IAM Role created for addToKitchenLog function"
+    Value: !GetAtt addToKitchenLogRole.Arn

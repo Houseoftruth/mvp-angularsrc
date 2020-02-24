@@ -1,0 +1,26 @@
+ Parameters:
+  TableName:
+    Type: String
+    Default: 'mvpchatlog'
+    Description: (Required) The name of the new DynamoDB to store connection identifiers for each connected clients. Minimum 3 characters
+    MinLength: 3
+    MaxLength: 50
+    AllowedPattern: ^[A-Za-z_]+$
+    ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
+
+ mvpchatlog:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: 'mvp-chatlog'
+      AttributeDefinitions:
+      - AttributeName: "date"
+        AttributeType: "N"
+      KeySchema:
+      - AttributeName: "date"
+        KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      SSESpecification:
+        SSEEnabled: True
+      TableName: !Ref TableName

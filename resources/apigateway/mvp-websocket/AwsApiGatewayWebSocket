@@ -1,0 +1,67 @@
+mvpsocket:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: mvpsocket
+      ProtocolType: WEBSOCKET
+      RouteSelectionExpression: "$request.body.message"
+ 
+ 
+  DisconnectRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref mvpsocket
+      RouteKey: $disconnect
+      AuthorizationType: NONE
+      OperationName: DisconnectRoute
+      Target: !Join
+        - '/'
+        - - 'integrations'
+          - !Ref DisconnectInteg
+
+  DisconnectInteg:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref mvpsocket
+      Description: Disconnect Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri: 
+        Fn::Sub:
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OnDisconnectFunction.Arn}/invocations
+ 
+  SendRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref mvpsocket
+      RouteKey: sendmessage
+      AuthorizationType: NONE
+      OperationName: SendRoute
+      Target: !Join
+        - '/'
+        - - 'integrations'
+          - !Ref SendInteg
+  
+  SendInteg:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref mvpsocket
+      Description: Send Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri: 
+        Fn::Sub:
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SendMessageFunction.Arn}/invocations
+  
+  Deployment:
+    Type: AWS::ApiGatewayV2::Deployment
+    DependsOn:
+    - SendRoute
+    - DisconnectRoute
+    Properties:
+      ApiId: !Ref mvpsocket
+
+  Stage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      StageName: Prod
+      Description: Prod Stage
+      DeploymentId: !Ref Deployment
+      ApiId: !Ref mvpsocket

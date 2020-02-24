@@ -1,0 +1,28 @@
+  storeQr:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: storeQr/
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /storeqr
+            Method: get
+      Policies:
+      - AmazonS3FullAccess
+
+Outputs:
+
+  storeQr:
+    Description: "storeQr Lambda Function ARN"
+    Value: !GetAtt storeQr.Arn
+
+  storeQrIamRole:
+    Description: "Implicit IAM Role created for storeQr function"
+    Value: !GetAtt storeQrRole.Arn
+  
+  storeQrApi:
+    Description: "API Gateway endpoint URL for Prod stage for storeQr function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
