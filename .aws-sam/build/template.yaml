@@ -133,11 +133,6 @@ Resources:
         WriteCapacityUnits: 5
       SSESpecification:
         SSEEnabled: true
-  removeBucket:
-    Type: Custom::cli2cloudformation
-    Properties:
-      ServiceToken: arn:aws:lambda:eu-central-1:077829515820:function:mvp-stack-storeQr-JYROEIC23RDR
-      CliCommandDelete: aws s3 rb s3://bucket-name --force
   mvpusers:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -245,8 +240,6 @@ Resources:
           Action: s3:GetObject
           Resource:
             Fn::Sub: arn:aws:s3:::${mvpangularsrc}/*
-  mvpsrc:
-    Type: AWS::S3::Bucket
   ProductBucketPolicy2:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -270,6 +263,10 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: mvpsamsrc
+  mvpsamcf:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: mvpsamcf
   mvpangularsrc:
     Type: AWS::S3::Bucket
     Properties:
@@ -381,7 +378,7 @@ Resources:
         HelloWorld:
           Type: Api
           Properties:
-            Path: /createtable
+            Path: mvp-createtable/
             Method: get
       Policies:
       - AmazonDynamoDBFullAccess
