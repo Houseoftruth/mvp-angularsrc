@@ -20,7 +20,7 @@ phases:
  
   post_build:
     commands:
-      - y | sam deploy  
+      - echo y | sam deploy  
       - aws s3 sync ./dist s3://mvpangular --acl public-read --delete
       - aws s3 sync ./ s3://mvpsamcf --acl public-read --delete
 
