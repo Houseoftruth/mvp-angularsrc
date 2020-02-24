@@ -126,12 +126,7 @@ Resources:
         SSEEnabled: True
       TableName: !Ref TableName
 
-  removeBucket:
-    Type: Custom::cli2cloudformation
-    Properties:
-      ServiceToken: "arn:aws:lambda:eu-central-1:077829515820:function:mvp-stack-storeQr-JYROEIC23RDR"
-      CliCommandDelete: "aws s3 rb s3://bucket-name --force"
-
+ 
   mvpusers:
     Type: AWS::DynamoDB::Table
     Properties:
