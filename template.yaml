@@ -229,7 +229,7 @@ Resources:
   mvpsamcf:
     Type: AWS::S3::Bucket 
     Properties:
-      BucketName: 'mvpangularsrc'
+      BucketName: 'mvpsamcf'
   ProductBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
