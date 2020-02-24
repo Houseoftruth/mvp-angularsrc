@@ -45,6 +45,7 @@ Parameters:
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
 
 Resources:
+
   mvpsocket:
     Type: AWS::ApiGatewayV2::Api
     Properties:
@@ -64,6 +65,7 @@ Resources:
         - '/'
         - - 'integrations'
           - !Ref DisconnectInteg
+
   DisconnectInteg:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
@@ -73,6 +75,7 @@ Resources:
       IntegrationUri: 
         Fn::Sub:
             arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OnDisconnectFunction.Arn}/invocations
+ 
   SendRoute:
     Type: AWS::ApiGatewayV2::Route
     Properties:
@@ -84,6 +87,7 @@ Resources:
         - '/'
         - - 'integrations'
           - !Ref SendInteg
+  
   SendInteg:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
@@ -93,6 +97,7 @@ Resources:
       IntegrationUri: 
         Fn::Sub:
             arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SendMessageFunction.Arn}/invocations
+  
   Deployment:
     Type: AWS::ApiGatewayV2::Deployment
     DependsOn:
@@ -142,6 +147,7 @@ Resources:
       SSESpecification:
         SSEEnabled: True
       TableName: !Ref TableNamea
+
   ConnectionsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -158,7 +164,7 @@ Resources:
         SSEEnabled: True
       TableName: !Ref TableNameb
 
-  
+
  
   OnDisconnectFunction:
     Type: AWS::Serverless::Function
@@ -174,7 +180,6 @@ Resources:
       - DynamoDBCrudPolicy:
           TableName: !Ref TableName
       
- 
   OnDisconnectPermission:
     Type: AWS::Lambda::Permission
     DependsOn:
@@ -203,6 +208,7 @@ Resources:
           - 'execute-api:ManageConnections'
           Resource:
           - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${mvpsocket}/*'
+
   SendMessagePermission:
     Type: AWS::Lambda::Permission
     DependsOn:
@@ -222,8 +228,7 @@ Resources:
 
   mvpsamcf:
     Type: AWS::S3::Bucket 
-    Properties:
-      BucketName: 'mvpsamcf'
+
   ProductBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
