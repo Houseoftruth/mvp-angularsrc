@@ -228,7 +228,8 @@ Resources:
 
   mvpsamcf:
     Type: AWS::S3::Bucket 
-
+    Properties:
+      BucketName: 'mvpangularsrc'
   ProductBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -240,8 +241,11 @@ Resources:
           - Sid: PublicReadForGetBucketObjects
             Effect: Allow
             Principal: '*'
-            Action: ['s3:GetObject','s3:PutObject','s3:DeleteObject']
-            Resource: !Sub arn:aws:s3:::${mvpsamcf}/*        
+            Action: 's3:GetObject'
+            Resource: !Sub arn:aws:s3:::${mvpsamcf}/*   
+
+
+   
   mvpqr:
     Type: AWS::S3::Bucket 
     Properties:
