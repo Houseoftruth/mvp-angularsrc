@@ -257,6 +257,8 @@ Resources:
             Fn::Sub: arn:aws:s3:::${mvpsamsrc}/*
   mvpdistribution:
     Type: AWS::CloudFront::Distribution
+    Properties:
+      Enabled: true
   mvpangular:
     Type: AWS::S3::Bucket
     Properties:
