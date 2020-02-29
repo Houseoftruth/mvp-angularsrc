@@ -32,7 +32,7 @@ Parameters:
 Parameters:
   DomainName:
     Type: String
-    Default: 'mvp.net'
+    Default: 'blingoooo.s3.amazonaws.com'
     Description: Domain name to use
 
   ApiPath:
