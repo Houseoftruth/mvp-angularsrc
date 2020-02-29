@@ -50,7 +50,7 @@ Parameters:
   ApiOriginKey:
     Type: String
     Default: ''
-    Description: x-api-key HTTP request header sent to API
+    Description: x-api-key HTTP request Bheader sent to API
   CreateRedirect:
     Type: String
     Default: 'true'
@@ -364,7 +364,7 @@ Resources:
   LogBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      AccessControl: LogDeliveryWrite
+      AccessControl: 'LogDeliveryWrite'
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
