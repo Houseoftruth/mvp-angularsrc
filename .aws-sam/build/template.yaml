@@ -547,8 +547,7 @@ Resources:
           - DomainName
         EvaluateTargetHealth: false
         HostedZoneId: Z2FDTNDATAQYW2
-      HostedZoneId:
-        Ref: HostedZoneId
+      HostedZoneId: Z2FDTNDATAQYW2
       Name:
         Ref: DomainName
       Type: A
@@ -562,8 +561,7 @@ Resources:
           - DomainName
         EvaluateTargetHealth: false
         HostedZoneId: Z2FDTNDATAQYW2
-      HostedZoneId:
-        Ref: HostedZoneId
+      HostedZoneId: Z2FDTNDATAQYW2
       Name:
         Ref: DomainName
       Type: AAAA
@@ -578,8 +576,7 @@ Resources:
           - DomainName
         EvaluateTargetHealth: false
         HostedZoneId: Z2FDTNDATAQYW2
-      HostedZoneId:
-        Ref: HostedZoneId
+      HostedZoneId: Z2FDTNDATAQYW2
       Name:
         Fn::Sub: www.${DomainName}
       Type: A
@@ -594,8 +591,7 @@ Resources:
           - DomainName
         EvaluateTargetHealth: false
         HostedZoneId: Z2FDTNDATAQYW2
-      HostedZoneId:
-        Ref: HostedZoneId
+      HostedZoneId: Z2FDTNDATAQYW2
       Name:
         Fn::Sub: www.${DomainName}
       Type: AAAA

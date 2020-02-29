@@ -556,8 +556,8 @@ Resources:
       AliasTarget:
         DNSName: !GetAtt CloudFrontDistribution.DomainName
         EvaluateTargetHealth: false
-        HostedZoneId: Z2FDTNDATAQYW2 # CloudFront hosted zone ID
-      HostedZoneId: !Ref HostedZoneId
+        HostedZoneId: 'Z2FDTNDATAQYW2' # CloudFront hosted zone ID
+      HostedZoneId: 'Z2FDTNDATAQYW2'
       Name: !Ref DomainName
       Type: A
 
@@ -567,8 +567,8 @@ Resources:
       AliasTarget:
         DNSName: !GetAtt CloudFrontDistribution.DomainName
         EvaluateTargetHealth: false
-        HostedZoneId: Z2FDTNDATAQYW2 # CloudFront hosted zone ID
-      HostedZoneId: !Ref HostedZoneId
+        HostedZoneId: 'Z2FDTNDATAQYW2' # CloudFront hosted zone ID
+      HostedZoneId: 'Z2FDTNDATAQYW2'
       Name: !Ref DomainName
       Type: AAAA
 
@@ -579,8 +579,8 @@ Resources:
       AliasTarget:
         DNSName: !GetAtt RedirectCloudFrontDistribution.DomainName
         EvaluateTargetHealth: false
-        HostedZoneId: Z2FDTNDATAQYW2 # CloudFront hosted zone ID
-      HostedZoneId: !Ref HostedZoneId
+        HostedZoneId: 'Z2FDTNDATAQYW2' # CloudFront hosted zone ID
+      HostedZoneId: 'Z2FDTNDATAQYW2'
       Name: !Sub 'www.${DomainName}'
       Type: A
 
@@ -591,8 +591,8 @@ Resources:
       AliasTarget:
         DNSName: !GetAtt RedirectCloudFrontDistribution.DomainName
         EvaluateTargetHealth: false
-        HostedZoneId: Z2FDTNDATAQYW2 # CloudFront hosted zone ID
-      HostedZoneId: !Ref HostedZoneId
+        HostedZoneId: 'Z2FDTNDATAQYW2' # CloudFront hosted zone ID
+      HostedZoneId: 'Z2FDTNDATAQYW2'
       Name: !Sub 'www.${DomainName}'
       Type: AAAA
         
