@@ -24,7 +24,7 @@ Globals:
 Parameters:
   DomainName:
     Type: String
-    Default: example.com
+    Default: mvp.net
     Description: Domain name to use
   HostedZoneId:
     Type: AWS::Route53::HostedZone::Id
@@ -36,7 +36,7 @@ Parameters:
     Description: URI path to route to API
   ApiOriginDomainName:
     Type: String
-    Default: api.example.com
+    Default: api.mvp.net
     Description: API origin domain name
   ApiOriginPath:
     Type: String
@@ -93,9 +93,6 @@ Parameters:
     AllowedPattern: ^[A-Za-z_]+$
     ConstraintDescription: Required. Can be characters and underscore only. No numbers
       or special characters allowed.
-ParameterLabels:
-  CreateRedirect:
-    default: Redirect http(s)://www.<domain> to https://domain?
 Conditions:
   CreateRedirect:
     Fn::Not:

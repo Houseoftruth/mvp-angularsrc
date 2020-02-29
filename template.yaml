@@ -25,14 +25,14 @@ Parameters:
           - ApiOriginDomainName
           - ApiOriginPath
           - ApiOriginKey
-ParameterLabels:
-  CreateRedirect:
-    default: 'Redirect http(s)://www.<domain> to https://domain?'
+  ParameterLabels:
+    CreateRedirect:
+      default: 'Redirect http(s)://www.<domain> to https://domain?'
 
 Parameters:
   DomainName:
     Type: String
-    Default: 'example.com'
+    Default: 'mvp.net'
     Description: Domain name to use
   HostedZoneId:
     Type: 'AWS::Route53::HostedZone::Id'
@@ -44,7 +44,7 @@ Parameters:
     Description: URI path to route to API
   ApiOriginDomainName:
     Type: String
-    Default: 'api.example.com'
+    Default: 'api.mvp.net'
     Description: API origin domain name
   ApiOriginPath:
     Type: String
