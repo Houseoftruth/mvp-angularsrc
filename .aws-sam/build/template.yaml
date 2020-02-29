@@ -260,6 +260,11 @@ Resources:
     Properties:
       DistributionConfig:
         Enabled: true
+        DomainName: mvpangularsrc.s3.amazonaws.com
+        Id: OriginId
+        OriginPath: ./index.html
+        S3OriginConfig:
+          OriginAccessIdentity: ello
   mvpangular:
     Type: AWS::S3::Bucket
     Properties:
