@@ -264,11 +264,12 @@ Resources:
     Properties:
       DistributionConfig:
         Enabled: True
-        DomainName: 'mvpangularsrc.s3.amazonaws.com'
-        Id: 'OriginId'
-        OriginPath: './index.html'
-        S3OriginConfig: 
-          OriginAccessIdentity: 'ello'
+        Origins:
+          DomainName: 'mvpangularsrc.s3.amazonaws.com'
+          Id: 'OriginId'
+          OriginPath: './index.html'
+          S3OriginConfig: 
+            OriginAccessIdentity: 'ello'
         
   mvpangular:
     Type: AWS::S3::Bucket 
