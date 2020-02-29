@@ -1,0 +1,17 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - pip install --user aws-sam-cli  
+      - USER_BASE_PATH=$(python -m site --user-base)
+      - export PATH=$PATH:$USER_BASE_PATH/bin
+  build:
+    commands:
+      - sam build 
+  post_build:
+    commands:
+      - echo y | sam deploy  
+      - aws s3 sync ./ s3://mvpsamcf --acl public-read-write --delete
+
+
+  

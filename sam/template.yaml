@@ -45,6 +45,7 @@ Parameters:
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
 
 Resources:
+
   mvpsocket:
     Type: AWS::ApiGatewayV2::Api
     Properties:
@@ -64,6 +65,7 @@ Resources:
         - '/'
         - - 'integrations'
           - !Ref DisconnectInteg
+
   DisconnectInteg:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
@@ -73,6 +75,7 @@ Resources:
       IntegrationUri: 
         Fn::Sub:
             arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OnDisconnectFunction.Arn}/invocations
+ 
   SendRoute:
     Type: AWS::ApiGatewayV2::Route
     Properties:
@@ -84,6 +87,7 @@ Resources:
         - '/'
         - - 'integrations'
           - !Ref SendInteg
+  
   SendInteg:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
@@ -93,6 +97,7 @@ Resources:
       IntegrationUri: 
         Fn::Sub:
             arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SendMessageFunction.Arn}/invocations
+  
   Deployment:
     Type: AWS::ApiGatewayV2::Deployment
     DependsOn:
@@ -126,7 +131,6 @@ Resources:
         SSEEnabled: True
       TableName: !Ref TableName
 
- 
   mvpusers:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -143,6 +147,7 @@ Resources:
       SSESpecification:
         SSEEnabled: True
       TableName: !Ref TableNamea
+
   ConnectionsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -159,7 +164,7 @@ Resources:
         SSEEnabled: True
       TableName: !Ref TableNameb
 
-  
+
  
   OnDisconnectFunction:
     Type: AWS::Serverless::Function
@@ -174,6 +179,7 @@ Resources:
       Policies:
       - DynamoDBCrudPolicy:
           TableName: !Ref TableName
+      
   OnDisconnectPermission:
     Type: AWS::Lambda::Permission
     DependsOn:
@@ -202,6 +208,7 @@ Resources:
           - 'execute-api:ManageConnections'
           Resource:
           - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${mvpsocket}/*'
+
   SendMessagePermission:
     Type: AWS::Lambda::Permission
     DependsOn:
@@ -218,7 +225,8 @@ Resources:
       Name: mvpsocket
       ProtocolType: WEBSOCKET
       RouteSelectionExpression: "$request.body.message"
-         
+
+   
   mvpqr:
     Type: AWS::S3::Bucket 
     Properties:
@@ -236,21 +244,7 @@ Resources:
             Principal: '*'
             Action: 's3:GetObject'
             Resource: !Sub arn:aws:s3:::${mvpqr}/* 
-  mvpsrc:
-   Type: AWS::S3::Bucket 
-  ProductBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref mvpsrc
-      PolicyDocument:
-        Id: PublicReadPolicy
-        Version: 2012-10-17
-        Statement:
-          - Sid: PublicReadForGetBucketObjects
-            Effect: Allow
-            Principal: '*'
-            Action: 's3:GetObject'
-            Resource: !Sub arn:aws:s3:::${mvpsrc}/*
+
   ProductBucketPolicy2:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -301,6 +295,25 @@ Resources:
             Action: 's3:GetObject'
             Resource: !Sub arn:aws:s3:::${mvpsamsrc}/* 
 
+
+  mvpsamcf:
+    Type: AWS::S3::Bucket 
+    Properties:
+      BucketName: 'mvpsamcf'
+  ProductBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref mvpsamcf
+      PolicyDocument:
+        Id: PublicReadPolicy
+        Version: 2012-10-17
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Sub arn:aws:s3:::${mvpsamcf}/* 
+
   mvpangularsrc:
     Type: AWS::S3::Bucket 
     Properties:
@@ -318,6 +331,7 @@ Resources:
             Principal: '*'
             Action: 's3:GetObject'
             Resource: !Sub arn:aws:s3:::${mvpangularsrc}/* 
+
   myLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -360,7 +374,7 @@ Resources:
   addToCustomerLog:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: addToCustomerLogs/
+      CodeUri: mvp-addtocustomerlog/
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
@@ -376,7 +390,7 @@ Resources:
   addToAdminLog:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: addToAdminLogs/
+      CodeUri: mvp-addtoadminlog
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
@@ -388,11 +402,12 @@ Resources:
       Policies:
       - AmazonDynamoDBFullAccess
       - AmazonS3FullAccess 
-
+    
+ 
   addToKitchenLog:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: addToKitchenLogs/
+      CodeUri: mvp-addtokitchenlog/
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
@@ -407,7 +422,7 @@ Resources:
   createUser:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: createUser/
+      CodeUri: mvp-createuser/
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
@@ -422,7 +437,7 @@ Resources:
   createTable:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: createTable/
+      CodeUri: mvp-createtable/
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
@@ -437,7 +452,7 @@ Resources:
   storeQr:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: storeQr/
+      CodeUri: mvp-storeqr/
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
@@ -453,16 +468,15 @@ Resources:
 
 
 Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-
+  
   addToCustomerLogApi:
     Description: "API Gateway endpoint URL for Prod stage for addToCustomerLog function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+
   addToCustomerLog:
     Description: "addtoCustomerLog Lambda Function ARN"
     Value: !GetAtt addToCustomerLog.Arn
+
   addToCustomerLogIamRole:
     Description: "Implicit IAM Role created for addToCustomerLogfunction"
     Value: !GetAtt addToCustomerLogRole.Arn
@@ -470,9 +484,11 @@ Outputs:
   addToAdminLogApi:
     Description: "API Gateway endpoint URL for Prod stage for addToAdminLogRole function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+
   addToAdminLog:
     Description: "addToAdminLogRole Lambda Function ARN"
     Value: !GetAtt addToAdminLog.Arn
+
   addToAdminLogIamRole:
     Description: "Implicit IAM Role created for addToAdminLogRole function"
     Value: !GetAtt addToAdminLogRole.Arn
@@ -480,9 +496,11 @@ Outputs:
   addToKitchenLogApi:
     Description: "API Gateway endpoint URL for Prod stage for addToKitchenLog function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+
   addToKitchenLog:
     Description: "addToKitchenLog Lambda Function ARN"
     Value: !GetAtt addToKitchenLog.Arn
+
   addToKitchenLogIamRole:
     Description: "Implicit IAM Role created for addToKitchenLog function"
     Value: !GetAtt addToKitchenLogRole.Arn
@@ -490,9 +508,11 @@ Outputs:
   createUserApi:
     Description: "API Gateway endpoint URL for Prod stage for createUser function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+
   createUser:
     Description: "createUser Lambda Function ARN"
     Value: !GetAtt createUser.Arn
+
   createUserIamRole:
     Description: "Implicit IAM Role created for createUser function"
     Value: !GetAtt createUserRole.Arn
@@ -500,9 +520,11 @@ Outputs:
   createTableApi:
     Description: "API Gateway endpoint URL for Prod stage for createTable function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+
   createTable:
     Description: "createTable Lambda Function ARN"
     Value: !GetAtt createTable.Arn
+
   createTableIamRole:
     Description: "Implicit IAM Role created for createTab;e function"
     Value: !GetAtt createTableRole.Arn
@@ -510,9 +532,11 @@ Outputs:
   storeQrApi:
     Description: "storeQr endpoint URL for Prod stage for storeQrfunction"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+
   storeQr:
     Description: "storeQr Lambda Function ARN"
     Value: !GetAtt storeQr.Arn
+    
   storeQrIamRole:
     Description: "Implicit IAM Role created for storeQr function"
     Value: !GetAtt storeQrRole.Arn

@@ -259,6 +259,11 @@ Resources:
             Action: 's3:GetObject'
             Resource: !Sub arn:aws:s3:::${mvpsamsrc}/*
 
+  mvpdistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      Enabled: true
+
   mvpangular:
     Type: AWS::S3::Bucket 
     Properties:
@@ -444,7 +449,7 @@ Resources:
         HelloWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: mvp-createtable/
+            Path: /createtable
             Method: get
       Policies:
       - AmazonDynamoDBFullAccess
