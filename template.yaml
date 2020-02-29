@@ -381,7 +381,7 @@ Resources:
   WebBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      AccessControl: 'Private'
+      AccessControl: 'Public'
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -415,7 +415,7 @@ Resources:
     Type: 'AWS::S3::Bucket'
     Condition: 'CreateRedirect'
     Properties:
-      AccessControl: 'Private'
+      AccessControl: 'Public'
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
