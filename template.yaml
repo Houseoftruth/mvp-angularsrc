@@ -535,7 +535,7 @@ Resources:
         IPV6Enabled: true
         Origins:
           - Id: s3
-            DomainName: !Sub '${RedirectBucket2}.s3-website-${AWS::Region}.amazonaws.com'
+            DomainName: !Sub '${RedirectBucket}.s3-website-${AWS::Region}.amazonaws.com'
             CustomOriginConfig:
               OriginProtocolPolicy: http-only # private bucket access only works over HTTP
         PriceClass: PriceClass_100
