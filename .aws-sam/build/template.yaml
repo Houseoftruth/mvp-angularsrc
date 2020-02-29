@@ -255,17 +255,6 @@ Resources:
           Action: s3:GetObject
           Resource:
             Fn::Sub: arn:aws:s3:::${mvpsamsrc}/*
-  mvpdistribution:
-    Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        Enabled: true
-        Origins:
-          Fn::Select:
-          - DomainName: mvpangularsrc.s3.amazonaws.com
-            Id: S3-test-folder
-            S3OriginConfig:
-              OriginAccessIdentity: ello
   mvpangular:
     Type: AWS::S3::Bucket
     Properties:

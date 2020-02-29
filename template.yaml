@@ -43,6 +43,14 @@ Parameters:
     MaxLength: 50
     AllowedPattern: ^[A-Za-z_]+$
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
+  TableNamec:
+    Type: String
+    Default: 'simplechatconnectionssss'
+    Description: (Required) The name of the new DynamoDB to store connection identifiers for each connected clients. Minimum 3 characters
+    MinLength: 3
+    MaxLength: 50
+    AllowedPattern: ^[A-Za-z_]+$
+    ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
 
 Resources:
 
@@ -259,19 +267,7 @@ Resources:
             Action: 's3:GetObject'
             Resource: !Sub arn:aws:s3:::${mvpsamsrc}/*
 
-  mvpdistribution:
-    Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        Enabled: True
-        Origins: !Select [ {
-                        "DomainName" : "mvpangularsrc.s3.amazonaws.com",
-                        "Id" : "S3-test-folder",
-                        "S3OriginConfig" : {
-                            "OriginAccessIdentity" : "ello"
-                        }
-                    } ]
-     
+ 
         
   mvpangular:
     Type: AWS::S3::Bucket 
