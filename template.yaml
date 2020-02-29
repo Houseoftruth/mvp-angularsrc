@@ -261,26 +261,8 @@ Resources:
 
   mvpdistribution:
     Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        Enabled: True
-        Origin: {
-        "Items": [
-            {
-                "S3OriginConfig": {
-                    "OriginAccessIdentity": {
-  "Type" : "AWS::CloudFront::CloudFrontOriginAccessIdentity",
-  "Properties" : {
-      "CloudFrontOriginAccessIdentityConfig" : CloudFrontOriginAccessIdentityConfig
-    }
-}
-                },
-                "Id": "S3-origin",
-                "DomainName": "example.s3.amazonaws.com"
-            }
-        ],
-        "Quantity": 1
-    }
+    
+        
   mvpangular:
     Type: AWS::S3::Bucket 
     Properties:
