@@ -261,7 +261,9 @@ Resources:
 
   mvpdistribution:
     Type: AWS::CloudFront::Distribution
-    
+    Properties:
+      DistributionConfig:
+        Enabled: True
         
   mvpangular:
     Type: AWS::S3::Bucket 
