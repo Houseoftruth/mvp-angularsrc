@@ -268,7 +268,7 @@ Resources:
           DomainName: 'mvpangularsrc.s3.amazonaws.com'
           Id: 'OriginId'
           OriginPath: './index.html'
-          S3OriginConfig: 
+          S3OriginConfig:  
             OriginAccessIdentity: 'ello'
         
   mvpangular:
