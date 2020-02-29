@@ -263,7 +263,10 @@ Resources:
         Origin:
           Items:
           - S3OriginConfig:
-              OriginAccessIdentity: null
+              OriginAccessIdentity:
+                Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+                Properties:
+                  CloudFrontOriginAccessIdentityConfig: CloudFrontOriginAccessIdentityConfig
             Id: S3-origin
             DomainName: example.s3.amazonaws.com
           Quantity: 1
