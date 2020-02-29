@@ -34,10 +34,7 @@ Parameters:
     Type: String
     Default: 'mvp.net'
     Description: Domain name to use
-  HostedZoneId:
-    Type: 'AWS::Route53::HostedZone::Id'
-    Default: "Z2FDTNDATAQYW2"
-    Description: HostedZoneId for the Domain
+
   ApiPath:
     Type: String
     Default: '/api'
