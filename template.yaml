@@ -10,7 +10,6 @@ Globals:
   Function:
     Timeout: 3
 
-Parameters:
   ParameterGroups:
       - Label:
           default: 'Domain Configuration'
@@ -142,6 +141,7 @@ Parameters:
     AllowedValues:
       - 'true'
       - 'false'
+Parameters:
 
   TableName:
     Type: String
