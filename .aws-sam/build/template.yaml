@@ -7,21 +7,113 @@ Description: 'mvp-sam
   '
 Globals:
   Function:
-    Handler: index.handler
-    Runtime: nodejs10.x
-    MemorySize: 128
-    Timeout: 1
-    AutoPublishAlias: live
-    AssumeRolePolicyDocument:
-      Version: '2012-10-17'
-      Statement:
-      - Effect: Allow
-        Principal:
-          Service:
-          - lambda.amazonaws.com
-          - edgelambda.amazonaws.com
-        Action: sts:AssumeRole
+    Timeout: 3
 Parameters:
+  ParameterGroups:
+  - Label:
+      default: Domain Configuration
+    Parameters:
+    - DomainName
+    - HostedZoneId
+    - CreateRedirect
+  - Label:
+      default: API Origin Configuration
+    Parameters:
+    - ApiPath
+    - ApiOriginDomainName
+    - ApiOriginPath
+    - ApiOriginKey
+  ParameterLabels:
+    CreateRedirect:
+      default: Redirect http(s)://www.<domain> to https://domain?
+  ComputeType:
+    AllowedValues:
+    - BUILD_GENERAL1_SMALL
+    - BUILD_GENERAL1_MEDIUM
+    - BUILD_GENERAL1_LARGE
+    Default: BUILD_GENERAL1_SMALL
+    Description: AWS CodeBuild project compute type.
+    Type: String
+  EnvironmentType:
+    AllowedValues:
+    - LINUX_CONTAINER
+    - WINDOWS_CONTAINER
+    Default: LINUX_CONTAINER
+    Description: Environment type used by AWS CodeBuild. See the documentation for
+      details (https://docs.aws.amazon.com/codebuild/latest/userguide/create-project.html#create-project-cli).
+    Type: String
+  SourceCodeProvider:
+    Type: String
+    Description: Location of your source code repository
+    Default: GitHub
+    AllowedValues:
+    - GitHub
+    - CodeCommit
+  GitHubOAuthToken:
+    Description: OAuth token used by AWS CodePipeline to connect to GitHub
+    NoEcho: true
+    Type: String
+    Default: ''
+  GitHubOwner:
+    Description: GitHub username owning the repo
+    Type: String
+    Default: ''
+  GitHubRepo:
+    Description: GitHub repo name
+    Type: String
+    Default: ''
+  GitHubBranch:
+    Description: GitHub repo branch name. It defaults to master if not specified.
+    Type: String
+    Default: master
+  CodeCommitRepo:
+    Type: String
+    Description: CodeCommit repository name, only specify if you chose CodeCommit
+      in SourceCodeProvider
+    Default: ''
+  CodeCommitBranch:
+    Type: String
+    Description: CodeCommit repository branch name, only specify if you chose CodeCommit
+      in SourceCodeProvider.
+    Default: master
+  DeployParameterOverrides:
+    Description: Parameter overrides for the deploy stage
+    Type: String
+    Default: '{}'
+  DeployStackName:
+    Description: The stack name for the deploy stage
+    Type: String
+    Default: ''
+  DeployRoleName:
+    Description: The IAM role name to deploy the CloudFormation stack. This role needs
+      to be configured to allow cloudformation.amazonaws.com to assume it. Deploy
+      stage will not be added if not specified.
+    Type: String
+    Default: ''
+  IntegTestRoleName:
+    Description: The IAM role name to deploy a test stack and run integration tests.
+      This role needs to be configured to allow codebuild.amazonaws.com and cloudformation.amazonaws.com
+      to assume it. Test stage will not be added if not specified.
+    Type: String
+    Default: ''
+  BuildSpecFilePath:
+    Description: Relative BuildSpec file path for build stage. For more information,
+      see https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
+    Type: String
+    Default: buildspec.yaml
+  IntegTestBuildSpecFilePath:
+    Description: Relative BuildSpec file path for test stage. For more information,
+      see https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
+    Type: String
+    Default: buildspec-integ-test.yaml
+  PublishToSAR:
+    Description: Whether to publish the application to AWS Serverless Application
+      Repository
+    Type: String
+    AllowedValues:
+    - true
+    - false
+    Default: false
   DomainName:
     Type: String
     Default: mvp.net
@@ -41,7 +133,7 @@ Parameters:
   ApiOriginKey:
     Type: String
     Default: ''
-    Description: x-api-key HTTP request header sent to API
+    Description: x-api-key HTTP request Bheader sent to API
   CreateRedirect:
     Type: String
     Default: 'true'
@@ -90,12 +182,490 @@ Parameters:
     ConstraintDescription: Required. Can be characters and underscore only. No numbers
       or special characters allowed.
 Conditions:
-  CreateRedirect:
+  HasTestStage:
     Fn::Not:
     - Fn::Equals:
-      - Ref: CreateRedirect
-      - 'false'
+      - Ref: IntegTestRoleName
+      - ''
+  HasDeployStage:
+    Fn::Not:
+    - Fn::Equals:
+      - Ref: DeployRoleName
+      - ''
+  HasPublishStage:
+    Fn::Equals:
+    - Ref: PublishToSAR
+    - 'true'
+  UseCodeCommit:
+    Fn::Equals:
+    - Ref: SourceCodeProvider
+    - CodeCommit
+  UseGitHub:
+    Fn::Equals:
+    - Ref: SourceCodeProvider
+    - GitHub
+Rules:
+  ValidateGitHub:
+    RuleCondition:
+      Fn::Equals:
+      - Ref: SourceCodeProvider
+      - GitHub
+    Assertions:
+    - Assert:
+        Fn::Not:
+        - Fn::Equals:
+          - Ref: GitHubOwner
+          - ''
+      AssertDescription: GitHubOwner must be specified when SourceCodeProvider is
+        GitHub
+    - Assert:
+        Fn::Not:
+        - Fn::Equals:
+          - Ref: GitHubRepo
+          - ''
+      AssertDescription: GitHubRepo must be specified when SourceCodeProvider is GitHub
+    - Assert:
+        Fn::Not:
+        - Fn::Equals:
+          - Ref: GitHubOAuthToken
+          - ''
+      AssertDescription: GitHubOAuthToken must be specified when SourceCodeProvider
+        is GitHub
+    - Assert:
+        Fn::Not:
+        - Fn::Equals:
+          - Ref: GitHubBranch
+          - ''
+      AssertDescription: GitHubBranch must be specified when SourceCodeProvider is
+        GitHub
+  ValidateCodeCommit:
+    RuleCondition:
+      Fn::Equals:
+      - Ref: SourceCodeProvider
+      - CodeCommit
+    Assertions:
+    - Assert:
+        Fn::Not:
+        - Fn::Equals:
+          - Ref: CodeCommitRepo
+          - ''
+      AssertDescription: CodeCommitRepo must be specified when SourceCodeProvider
+        is CodeCommit
+    - Assert:
+        Fn::Not:
+        - Fn::Equals:
+          - Ref: CodeCommitBranch
+          - ''
+      AssertDescription: CodeCommitBranch must be specified when SourceCodeProvider
+        is CodeCommit
 Resources:
+  Artifacts:
+    Properties:
+      LifecycleConfiguration:
+        Rules:
+        - ExpirationInDays: 30
+          Status: Enabled
+    Type: AWS::S3::Bucket
+  ArtifactsPolicy:
+    Condition: HasPublishStage
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: Artifacts
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Action:
+          - s3:GetObject
+          Effect: Allow
+          Principal:
+            Service:
+            - serverlessrepo.amazonaws.com
+          Resource:
+            Fn::Sub: ${Artifacts.Arn}/*
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStore:
+        Location:
+          Ref: Artifacts
+        Type: S3
+      RoleArn:
+        Fn::GetAtt:
+        - PipelineRole
+        - Arn
+      Stages:
+      - Name: Source
+        Actions:
+        - Fn::If:
+          - UseCodeCommit
+          - Name: CodeCommitSource
+            ActionTypeId:
+              Category: Source
+              Owner: AWS
+              Provider: CodeCommit
+              Version: '1'
+            Configuration:
+              RepositoryName:
+                Ref: CodeCommitRepo
+              BranchName:
+                Ref: CodeCommitBranch
+            OutputArtifacts:
+            - Name: SourceArtifact
+          - Name: GitHubSource
+            ActionTypeId:
+              Category: Source
+              Owner: ThirdParty
+              Provider: GitHub
+              Version: '1'
+            Configuration:
+              Owner:
+                Ref: GitHubOwner
+              OAuthToken:
+                Ref: GitHubOAuthToken
+              Repo:
+                Ref: GitHubRepo
+              Branch:
+                Ref: GitHubBranch
+              PollForSourceChanges: false
+            OutputArtifacts:
+            - Name: SourceArtifact
+      - Name: Build
+        Actions:
+        - Name: Build
+          ActionTypeId:
+            Category: Build
+            Owner: AWS
+            Provider: CodeBuild
+            Version: '1'
+          Configuration:
+            ProjectName:
+              Ref: BuildProject
+          InputArtifacts:
+          - Name: SourceArtifact
+          OutputArtifacts:
+          - Name: BuildArtifact
+      - Fn::If:
+        - HasTestStage
+        - Name: Test
+          Actions:
+          - Name: IntegrationTests
+            ActionTypeId:
+              Category: Test
+              Owner: AWS
+              Provider: CodeBuild
+              Version: '1'
+            Configuration:
+              ProjectName:
+                Ref: IntegrationTestsProject
+              PrimarySource: SourceArtifact
+            InputArtifacts:
+            - Name: SourceArtifact
+            - Name: BuildArtifact
+        - Ref: AWS::NoValue
+      - Fn::If:
+        - HasDeployStage
+        - Name: Deploy
+          Actions:
+          - Name: CreateChangeSet
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Provider: CloudFormation
+              Version: '1'
+            InputArtifacts:
+            - Name: BuildArtifact
+            Configuration:
+              ActionMode: CHANGE_SET_REPLACE
+              Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
+              ParameterOverrides:
+                Ref: DeployParameterOverrides
+              RoleArn:
+                Fn::Sub: arn:${AWS::Partition}:iam::${AWS::AccountId}:role/${DeployRoleName}
+              StackName:
+                Ref: DeployStackName
+              TemplatePath: BuildArtifact::packaged-template.yaml
+              ChangeSetName:
+                Fn::Sub: a-${DeployStackName}-Deploy
+            RunOrder: 1
+          - Name: ExecuteChangeSet
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Provider: CloudFormation
+              Version: '1'
+            Configuration:
+              ActionMode: CHANGE_SET_EXECUTE
+              StackName:
+                Ref: DeployStackName
+              ChangeSetName:
+                Fn::Sub: a-${DeployStackName}-Deploy
+            RunOrder: 2
+        - Ref: AWS::NoValue
+      - Fn::If:
+        - HasPublishStage
+        - Name: Publish
+          Actions:
+          - Name: Publish
+            ActionTypeId:
+              Category: Invoke
+              Owner: AWS
+              Provider: Lambda
+              Version: '1'
+            Configuration:
+              FunctionName:
+                Fn::GetAtt:
+                - SARPublishApp
+                - Outputs.ServerlessRepoPublishFunctionName
+            InputArtifacts:
+            - Name: BuildArtifact
+            RunOrder: 1
+        - Ref: AWS::NoValue
+  PipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description:
+        Fn::Sub: Used by CodePipeline. Created by CloudFormation ${AWS::StackId}
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - codepipeline.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+      - PolicyName: s3-access
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:DeleteObject
+            - s3:GetObject
+            - s3:GetObjectVersion
+            - s3:PutObject
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:s3:::${Artifacts}/*
+          - Effect: Allow
+            Action:
+            - s3:ListBucket
+            - s3:GetBucketPolicy
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:s3:::${Artifacts}
+      - PolicyName: codebuild-access
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - codebuild:StartBuild
+            - codebuild:BatchGetBuilds
+            Resource:
+            - Fn::GetAtt:
+              - BuildProject
+              - Arn
+            - Fn::If:
+              - HasTestStage
+              - Fn::GetAtt:
+                - IntegrationTestsProject
+                - Arn
+              - Ref: AWS::NoValue
+      - Fn::If:
+        - HasDeployStage
+        - PolicyName: deploy-cloudformation-access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - cloudformation:DescribeStacks
+              - cloudformation:CreateChangeSet
+              - cloudformation:ExecuteChangeSet
+              - cloudformation:DescribeChangeSet
+              Resource:
+              - Fn::Sub: arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${DeployStackName}/*
+        - Ref: AWS::NoValue
+      - Fn::If:
+        - HasPublishStage
+        - PolicyName: publish-lambda-access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - lambda:InvokeFunction
+              Resource:
+              - Fn::GetAtt:
+                - SARPublishApp
+                - Outputs.ServerlessRepoPublishFunctionArn
+        - Ref: AWS::NoValue
+      - Fn::If:
+        - HasDeployStage
+        - PolicyName: deploy-iam-access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - iam:PassRole
+              Resource:
+              - Fn::Sub: arn:${AWS::Partition}:iam::${AWS::AccountId}:role/${DeployRoleName}
+        - Ref: AWS::NoValue
+      - Fn::If:
+        - UseCodeCommit
+        - PolicyName: codecommit-access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - codecommit:ListBranches
+              - codecommit:GetBranch
+              - codecommit:GetCommit
+              - codecommit:GetUploadArchiveStatus
+              - codecommit:GitPull
+              - codecommit:UploadArchive
+              - codecommit:CancelUploadArchive
+              Resource:
+              - Fn::Sub: arn:${AWS::Partition}:codecommit:${AWS::Region}:${AWS::AccountId}:${CodeCommitRepo}
+        - Ref: AWS::NoValue
+  BuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      ServiceRole:
+        Fn::GetAtt:
+        - BuildProjectRole
+        - Arn
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec:
+          Ref: BuildSpecFilePath
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType:
+          Ref: ComputeType
+        Image: aws/codebuild/standard:2.0
+        Type:
+          Ref: EnvironmentType
+        EnvironmentVariables:
+        - Name: PACKAGE_BUCKET
+          Value:
+            Ref: Artifacts
+  GitHubWebhook:
+    Type: AWS::CodePipeline::Webhook
+    Condition: UseGitHub
+    Properties:
+      AuthenticationConfiguration:
+        SecretToken:
+          Ref: GitHubOAuthToken
+      Filters:
+      - JsonPath: $.ref
+        MatchEquals: refs/heads/{Branch}
+      Authentication: GITHUB_HMAC
+      TargetPipeline:
+        Ref: Pipeline
+      TargetAction: GitHubSource
+      TargetPipelineVersion:
+        Fn::GetAtt:
+        - Pipeline
+        - Version
+      RegisterWithThirdParty: true
+  IntegrationTestsProject:
+    Condition: HasTestStage
+    Type: AWS::CodeBuild::Project
+    Properties:
+      ServiceRole:
+        Fn::Sub: arn:${AWS::Partition}:iam::${AWS::AccountId}:role/${IntegTestRoleName}
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec:
+          Ref: IntegTestBuildSpecFilePath
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType:
+          Ref: ComputeType
+        Image: aws/codebuild/standard:2.0
+        Type:
+          Ref: EnvironmentType
+        EnvironmentVariables:
+        - Name: PACKAGE_BUCKET
+          Value:
+            Ref: Artifacts
+  CodeBuildPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName:
+        Fn::Sub: codebuild-access-${AWS::StackName}
+      Roles:
+      - Ref: BuildProjectRole
+      - Fn::If:
+        - HasTestStage
+        - Ref: IntegTestRoleName
+        - Ref: AWS::NoValue
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Action:
+          - logs:CreateLogGroup
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+          Effect: Allow
+          Resource:
+          - Fn::Sub: arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*
+        - Action:
+          - s3:PutObject
+          - s3:GetObject
+          - s3:GetObjectVersion
+          Effect: Allow
+          Resource:
+          - Fn::Sub: arn:${AWS::Partition}:s3:::${Artifacts}/*
+        - Action:
+          - s3:ListBucket
+          Effect: Allow
+          Resource:
+          - Fn::Sub: arn:${AWS::Partition}:s3:::${Artifacts}
+  BuildProjectRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description:
+        Fn::Sub: Used in CodeBuild project. Created by CloudFormation ${AWS::StackId}
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - codebuild.amazonaws.com
+        Version: '2012-10-17'
+      Path: /service-role/
+  DeployStagePolicy:
+    Condition: HasDeployStage
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName:
+        Fn::Sub: deploy-stage-access-${AWS::StackName}
+      Roles:
+      - Ref: DeployRoleName
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Action:
+          - s3:GetObject
+          Effect: Allow
+          Resource:
+          - Fn::Sub: arn:${AWS::Partition}:s3:::${Artifacts}/*
+  SARPublishApp:
+    Condition: HasPublishStage
+    Type: AWS::Serverless::Application
+    Properties:
+      Location:
+        ApplicationId: arn:aws:serverlessrepo:us-east-1:077246666028:applications/aws-serverless-codepipeline-serverlessrepo-publish
+        SemanticVersion: 1.0.1
   mvpsocket:
     Type: AWS::ApiGatewayV2::Api
     Properties:
@@ -301,300 +871,6 @@ Resources:
           Action: s3:GetObject
           Resource:
             Fn::Sub: arn:aws:s3:::${mvpsamsrc}/*
-  DefaultIndexLambdaFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: DefaultIndexLambdaFunction
-      Description: CloudFront origin-request default index handler
-  WebSecurityLambdaFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: WebSecurityLambdaFunction
-      Description: CloudFront origin-response web security handler
-  WebCertificate:
-    Type: AWS::CertificateManager::Certificate
-    Properties:
-      DomainName:
-        Ref: DomainName
-      SubjectAlternativeNames:
-      - Fn::Sub: '*.${DomainName}'
-      ValidationMethod: DNS
-      Tags:
-      - Key: Name
-        Value:
-          Ref: DomainName
-  LogBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      AccessControl: LogDeliveryWrite
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-        - ServerSideEncryptionByDefault:
-            SSEAlgorithm: AES256
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
-      Tags:
-      - Key: Name
-        Value:
-          Fn::Sub: ${AWS::StackName} Logs
-  WebBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      AccessControl: Private
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-        - ServerSideEncryptionByDefault:
-            SSEAlgorithm: AES256
-      BucketName:
-        Ref: DomainName
-      LoggingConfiguration:
-        DestinationBucketName:
-          Ref: LogBucket
-        LogFilePrefix: S3/
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
-      Tags:
-      - Key: Name
-        Value:
-          Fn::Sub: ${AWS::StackName} Web
-  WebBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket:
-        Ref: WebBucket
-      PolicyDocument:
-        Statement:
-        - Effect: Allow
-          Principal:
-            CanonicalUser:
-              Fn::GetAtt:
-              - CloudFrontOriginAccessIdentity
-              - S3CanonicalUserId
-          Action: s3:GetObject
-          Resource:
-            Fn::Join:
-            - /
-            - - Fn::GetAtt:
-                - WebBucket
-                - Arn
-              - '*'
-  RedirectBucket:
-    Type: AWS::S3::Bucket
-    Condition: CreateRedirect
-    Properties:
-      AccessControl: Private
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-        - ServerSideEncryptionByDefault:
-            SSEAlgorithm: AES256
-      WebsiteConfiguration:
-        RedirectAllRequestsTo:
-          HostName:
-            Ref: WebBucket
-          Protocol: https
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
-      Tags:
-      - Key: Name
-        Value:
-          Fn::Sub: ${AWS::StackName} Redirect
-  CloudFrontDistribution:
-    Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        Aliases:
-        - Ref: DomainName
-        CacheBehaviors:
-        - AllowedMethods:
-          - GET
-          - HEAD
-          - OPTIONS
-          - PUT
-          - PATCH
-          - POST
-          - DELETE
-          Compress: true
-          ForwardedValues:
-            Headers:
-            - Accept
-            - Authorization
-            - Content-Type
-            - Referer
-            QueryString: true
-          MaxTTL: 0
-          MinTTL: 0
-          DefaultTTL: 0
-          PathPattern:
-            Fn::Sub: ${ApiPath}*
-          TargetOriginId: api
-          ViewerProtocolPolicy: https-only
-        CustomErrorResponses:
-        - ErrorCachingMinTTL: 0
-          ErrorCode: 403
-          ResponseCode: 404
-          ResponsePagePath: /index.html
-        - ErrorCachingMinTTL: 0
-          ErrorCode: 404
-          ResponseCode: 404
-          ResponsePagePath: /index.html
-        DefaultCacheBehavior:
-          AllowedMethods:
-          - GET
-          - HEAD
-          Compress: true
-          ForwardedValues:
-            QueryString: false
-          TargetOriginId: s3
-          ViewerProtocolPolicy: redirect-to-https
-          LambdaFunctionAssociations:
-          - EventType: origin-request
-            LambdaFunctionARN:
-              Ref: DefaultIndexLambdaFunction.Version
-          - EventType: origin-response
-            LambdaFunctionARN:
-              Ref: WebSecurityLambdaFunction.Version
-        DefaultRootObject: index.html
-        Enabled: true
-        HttpVersion: http2
-        IPV6Enabled: true
-        Logging:
-          Bucket:
-            Fn::GetAtt:
-            - LogBucket
-            - DomainName
-          IncludeCookies: false
-          Prefix: CloudFront/
-        Origins:
-        - Id: api
-          DomainName:
-            Ref: ApiOriginDomainName
-          OriginPath:
-            Ref: ApiOriginPath
-          OriginCustomHeaders:
-          - HeaderName: x-api-key
-            HeaderValue:
-              Ref: ApiOriginKey
-          CustomOriginConfig:
-            OriginProtocolPolicy: https-only
-            OriginSSLProtocols:
-            - TLSv1.2
-        - Id: s3
-          DomainName:
-            Fn::GetAtt:
-            - WebBucket
-            - DomainName
-          S3OriginConfig:
-            OriginAccessIdentity:
-              Fn::Sub: origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}
-        PriceClass: PriceClass_100
-        ViewerCertificate:
-          AcmCertificateArn:
-            Ref: WebCertificate
-          MinimumProtocolVersion: TLSv1.2_2018
-          SslSupportMethod: sni-only
-  RedirectCloudFrontDistribution:
-    Type: AWS::CloudFront::Distribution
-    Condition: CreateRedirect
-    Properties:
-      DistributionConfig:
-        Aliases:
-        - Fn::Sub: www.${DomainName}
-        DefaultCacheBehavior:
-          AllowedMethods:
-          - GET
-          - HEAD
-          Compress: true
-          ForwardedValues:
-            QueryString: false
-          TargetOriginId: s3
-          ViewerProtocolPolicy: redirect-to-https
-        Enabled: true
-        HttpVersion: http2
-        IPV6Enabled: true
-        Origins:
-        - Id: s3
-          DomainName:
-            Fn::Sub: ${RedirectBucket}.s3-website-${AWS::Region}.amazonaws.com
-          CustomOriginConfig:
-            OriginProtocolPolicy: http-only
-        PriceClass: PriceClass_100
-        ViewerCertificate:
-          AcmCertificateArn:
-            Ref: WebCertificate
-          MinimumProtocolVersion: TLSv1.2_2018
-          SslSupportMethod: sni-only
-  CloudFrontOriginAccessIdentity:
-    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
-    Properties:
-      CloudFrontOriginAccessIdentityConfig:
-        Comment: CloudFront OAI
-  WebRecordSet:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      AliasTarget:
-        DNSName:
-          Fn::GetAtt:
-          - CloudFrontDistribution
-          - DomainName
-        EvaluateTargetHealth: false
-        HostedZoneId: Z2FDTNDATAQYW2
-      HostedZoneId: Z2FDTNDATAQYW2
-      Name:
-        Ref: DomainName
-      Type: A
-  WebIPV6RecordSet:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      AliasTarget:
-        DNSName:
-          Fn::GetAtt:
-          - CloudFrontDistribution
-          - DomainName
-        EvaluateTargetHealth: false
-        HostedZoneId: Z2FDTNDATAQYW2
-      HostedZoneId: Z2FDTNDATAQYW2
-      Name:
-        Ref: DomainName
-      Type: AAAA
-  RedirectRecordSet:
-    Type: AWS::Route53::RecordSet
-    Condition: CreateRedirect
-    Properties:
-      AliasTarget:
-        DNSName:
-          Fn::GetAtt:
-          - RedirectCloudFrontDistribution
-          - DomainName
-        EvaluateTargetHealth: false
-        HostedZoneId: Z2FDTNDATAQYW2
-      HostedZoneId: Z2FDTNDATAQYW2
-      Name:
-        Fn::Sub: www.${DomainName}
-      Type: A
-  RedirectIPV6RecordSet:
-    Type: AWS::Route53::RecordSet
-    Condition: CreateRedirect
-    Properties:
-      AliasTarget:
-        DNSName:
-          Fn::GetAtt:
-          - RedirectCloudFrontDistribution
-          - DomainName
-        EvaluateTargetHealth: false
-        HostedZoneId: Z2FDTNDATAQYW2
-      HostedZoneId: Z2FDTNDATAQYW2
-      Name:
-        Fn::Sub: www.${DomainName}
-      Type: AAAA
   mvpangular:
     Type: AWS::S3::Bucket
     Properties:
