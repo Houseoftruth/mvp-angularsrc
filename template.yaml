@@ -10,7 +10,7 @@ Globals:
   Function:
     Timeout: 3
 
-  ParameterGroups:
+ParameterGroups:
       - Label:
           default: 'Domain Configuration'
         Parameters:
@@ -140,7 +140,7 @@ Globals:
     Description: Set to 'false' to not create the redirect CloudFront distribution
     AllowedValues:
       - 'true'
-      - 'false'
+      - 'false'  
 Parameters:
 
   TableName:
