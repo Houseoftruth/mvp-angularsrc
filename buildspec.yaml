@@ -7,7 +7,7 @@ phases:
       - export PATH=$PATH:$USER_BASE_PATH/bin
   build:
     commands:
-      - sam build 
+      - sam build --region 'eu-cemtral-1'
   post_build:
     commands:
       - echo y | sam deploy  
