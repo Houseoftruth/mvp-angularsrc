@@ -10,137 +10,7 @@ Globals:
   Function:
     Timeout: 3
 
-ParameterGroups:
-      - Label:
-          default: 'Domain Configuration'
-        Parameters:
-          - DomainName
-          - HostedZoneId
-          - CreateRedirect
-      - Label:
-          default: 'API Origin Configuration'
-        Parameters:
-          - ApiPath
-          - ApiOriginDomainName
-          - ApiOriginPath
-          - ApiOriginKey
-  ParameterLabels:
-    CreateRedirect:
-      default: 'Redirect http(s)://www.<domain> to https://domain?'
-
-  ComputeType:
-    AllowedValues:
-      - BUILD_GENERAL1_SMALL
-      - BUILD_GENERAL1_MEDIUM
-      - BUILD_GENERAL1_LARGE
-    Default: BUILD_GENERAL1_SMALL
-    Description: AWS CodeBuild project compute type.
-    Type: String
-  EnvironmentType:
-    AllowedValues:
-      - LINUX_CONTAINER
-      - WINDOWS_CONTAINER
-    Default: LINUX_CONTAINER
-    Description: Environment type used by AWS CodeBuild. See the documentation for details (https://docs.aws.amazon.com/codebuild/latest/userguide/create-project.html#create-project-cli).
-    Type: String
-  SourceCodeProvider:
-    Type: String
-    Description: Location of your source code repository
-    Default: GitHub
-    AllowedValues:
-      - GitHub
-      - CodeCommit
-  GitHubOAuthToken:
-    Description: OAuth token used by AWS CodePipeline to connect to GitHub
-    NoEcho: true
-    Type: String
-    Default: ''
-  GitHubOwner:
-    Description: GitHub username owning the repo
-    Type: String
-    Default: ''
-  GitHubRepo:
-    Description: GitHub repo name
-    Type: String
-    Default: ''
-  GitHubBranch:
-    Description: GitHub repo branch name. It defaults to master if not specified.
-    Type: String
-    Default: master
-  CodeCommitRepo:
-    Type: String
-    Description: CodeCommit repository name, only specify if you chose CodeCommit in SourceCodeProvider
-    Default: ''
-  CodeCommitBranch:
-    Type: String
-    Description: CodeCommit repository branch name, only specify if you chose CodeCommit in SourceCodeProvider.
-    Default: master
-  DeployParameterOverrides:
-    Description: Parameter overrides for the deploy stage
-    Type: String
-    Default: '{}'
-  DeployStackName:
-    Description: The stack name for the deploy stage
-    Type: String
-    Default: ''
-  DeployRoleName:
-    Description: 
-      The IAM role name to deploy the CloudFormation stack. This role needs to be configured to allow
-      cloudformation.amazonaws.com to assume it. Deploy stage will not be added if not specified.
-    Type: String
-    Default: ''
-  IntegTestRoleName:
-    Description:
-      The IAM role name to deploy a test stack and run integration tests. This role needs to be configured
-      to allow codebuild.amazonaws.com and cloudformation.amazonaws.com to assume it. Test stage will not
-      be added if not specified.
-    Type: String
-    Default: ''
-  BuildSpecFilePath:
-    Description:
-      Relative BuildSpec file path for build stage. For more information, see https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
-    Type: String
-    Default: 'buildspec.yaml'
-  IntegTestBuildSpecFilePath:
-    Description: 
-      Relative BuildSpec file path for test stage. For more information, see https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
-    Type: String
-    Default: 'buildspec-integ-test.yaml'
-  PublishToSAR:
-    Description: Whether to publish the application to AWS Serverless Application Repository
-    Type: String
-    AllowedValues:
-      - true
-      - false
-    Default: false
-  DomainName:
-    Type: String
-    Default: 'mvp.net'
-    Description: Domain name to use
-
-  ApiPath:
-    Type: String
-    Default: '/api'
-    Description: URI path to route to API
-  ApiOriginDomainName:
-    Type: String
-    Default: 'api.mvp.net'
-    Description: API origin domain name
-  ApiOriginPath:
-    Type: String
-    Default: '/'
-    Description: API origin path
-  ApiOriginKey:
-    Type: String
-    Default: ''
-    Description: x-api-key HTTP request Bheader sent to API
-  CreateRedirect:
-    Type: String
-    Default: 'true'
-    Description: Set to 'false' to not create the redirect CloudFront distribution
-    AllowedValues:
-      - 'true'
-      - 'false'  
+  
 Parameters:
 
   TableName:
@@ -183,8 +53,139 @@ Parameters:
     MaxLength: 50
     AllowedPattern: ^[A-Za-z_]+$
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
+  ComputeType:
+    AllowedValues:
+      - BUILD_GENERAL1_SMALL
+      - BUILD_GENERAL1_MEDIUM
+      - BUILD_GENERAL1_LARGE
+    Default: BUILD_GENERAL1_SMALL
+    Description: AWS CodeBuild project compute type.
+    Type: String
+  EnvironmentType:
+      AllowedValues:
+        - LINUX_CONTAINER
+        - WINDOWS_CONTAINER
+      Default: LINUX_CONTAINER
+      Description: Environment type used by AWS CodeBuild. See the documentation for details (https://docs.aws.amazon.com/codebuild/latest/userguide/create-project.html#create-project-cli).
+      Type: String
+  SourceCodeProvider:
+      Type: String
+      Description: Location of your source code repository
+      Default: GitHub
+      AllowedValues:
+        - GitHub
+        - CodeCommit
+  GitHubOAuthToken:
+      Description: OAuth token used by AWS CodePipeline to connect to GitHub
+      NoEcho: true
+      Type: String
+      Default: ''
+  GitHubOwner:
+      Description: GitHub username owning the repo
+      Type: String
+      Default: ''
+  GitHubRepo:
+      Description: GitHub repo name
+      Type: String
+      Default: ''
+  GitHubBranch:
+      Description: GitHub repo branch name. It defaults to master if not specified.
+      Type: String
+      Default: master
+  CodeCommitRepo:
+      Type: String
+      Description: CodeCommit repository name, only specify if you chose CodeCommit in SourceCodeProvider
+      Default: ''
+  CodeCommitBranch:
+      Type: String
+      Description: CodeCommit repository branch name, only specify if you chose CodeCommit in SourceCodeProvider.
+      Default: master
+  DeployParameterOverrides:
+      Description: Parameter overrides for the deploy stage
+      Type: String
+      Default: '{}'
+  DeployStackName:
+      Description: The stack name for the deploy stage
+      Type: String
+      Default: ''
+  DeployRoleName:
+      Description: 
+        The IAM role name to deploy the CloudFormation stack. This role needs to be configured to allow
+        cloudformation.amazonaws.com to assume it. Deploy stage will not be added if not specified.
+      Type: String
+      Default: ''
+  IntegTestRoleName:
+      Description:
+        The IAM role name to deploy a test stack and run integration tests. This role needs to be configured
+        to allow codebuild.amazonaws.com and cloudformation.amazonaws.com to assume it. Test stage will not
+        be added if not specified.
+      Type: String
+      Default: ''
+  BuildSpecFilePath:
+      Description:
+        Relative BuildSpec file path for build stage. For more information, see https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
+      Type: String
+      Default: 'buildspec.yaml'
+  IntegTestBuildSpecFilePath:
+      Description: 
+        Relative BuildSpec file path for test stage. For more information, see https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
+      Type: String
+      Default: 'buildspec-integ-test.yaml'
+  PublishToSAR:
+      Description: Whether to publish the application to AWS Serverless Application Repository
+      Type: String
+      AllowedValues:
+        - true
+        - false
+      Default: false
+  DomainName:
+      Type: String
+      Default: 'mvp.net'
+      Description: Domain name to use
+
+  ApiPath:
+      Type: String
+      Default: '/api'
+      Description: URI path to route to API
+  ApiOriginDomainName:
+      Type: String
+      Default: 'api.mvp.net'
+      Description: API origin domain name
+  ApiOriginPath:
+      Type: String
+      Default: '/'
+      Description: API origin path
+  ApiOriginKey:
+      Type: String
+      Default: ''
+      Description: x-api-key HTTP request Bheader sent to API
+  CreateRedirect:
+      Type: String
+      Default: 'true'
+      Description: Set to 'false' to not create the redirect CloudFront distribution
+      AllowedValues:
+        - 'true'
+        - 'false'    
+ParameterGroups:
+      - Label:
+          default: 'Domain Configuration'
+        Parameters:
+          - DomainName
+          - HostedZoneId
+          - CreateRedirect
+      - Label:
+          default: 'API Origin Configuration'
+        Parameters:
+          - ApiPath
+          - ApiOriginDomainName
+          - ApiOriginPath
+          - ApiOriginKey
+ParameterLabels:
+    CreateRedirect:
+      default: 'Redirect http(s)://www.<domain> to https://domain?'
 
 
+  
 Conditions:
   HasTestStage:
     !Not [!Equals [!Ref IntegTestRoleName, '']]
